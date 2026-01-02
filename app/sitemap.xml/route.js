@@ -23,17 +23,28 @@ export async function GET() {
       changefreq: 'daily',
       priority: 0.8,
     },
-    ...categories.map(cat => ({
-      loc: `${baseUrl}/category/${cat.slug}`,
-      changefreq: 'daily',
-      priority: 0.7,
-    })),
-    ...blogs.map(blog => ({
-      loc: `${baseUrl}/blog/${blog.slug}`,
-      changefreq: 'weekly',
-      priority: 0.6,
-      lastmod: blog.updated_at || blog.created_at,
-    })),
+    categories.forEach(cat => {
+        urls.push(`
+          <url>
+            <loc>${baseUrl}/category/${cat.slug}</loc>
+            <lastmod>${new Date().toISOString()}</lastmod>
+            <changefreq>daily</changefreq>
+            <priority>0.7</priority>
+          </url>
+        `)
+      }),
+      
+      blogs.forEach(blog => {
+        urls.push(`
+          <url>
+            <loc>${baseUrl}/blog/${blog.slug}</loc>
+            <lastmod>${blog.updated_at ?? new Date().toISOString()}</lastmod>
+            <changefreq>weekly</changefreq>
+            <priority>0.6</priority>
+          </url>
+        `)
+      })
+      
   ]
 
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
