@@ -20,3 +20,40 @@
 .no-scrollbar::-webkit-scrollbar {
     display: none;
 }
+
+/* ============================
+   🔥 Google Translate FULL KILL
+   ============================ */
+
+/* Hide top translate iframe */
+iframe.goog-te-banner-frame {
+    display: none !important;
+  }
+  
+  /* Prevent page shift */
+  html {
+    margin-top: 0 !important;
+  }
+  
+  body {
+    top: 0 !important;
+    position: static !important;
+  }
+  
+  /* Hide Google logo & tooltip */
+  .goog-logo-link {
+    display: none !important;
+  }
+  
+  .goog-te-gadget {
+    height: 0 !important;
+    overflow: hidden !important;
+    color: transparent !important;
+  }
+  
+  /* Hide injected translate container */
+  #goog-gt-tt,
+  .goog-te-balloon-frame {
+    display: none !important;
+  }
+  

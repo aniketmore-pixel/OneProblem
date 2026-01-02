@@ -4,6 +4,7 @@ import upload_area from "./upload_area.svg"
 import hero_model_img from "./hero_model_img.png"
 import hero_product_img1 from "./hero_product_img1.png"
 import hero_product_img2 from "./hero_product_img2.png"
+import { BadgePercent, BookOpenCheck, ShieldCheck } from "lucide-react"
 import product_img1 from "./product_img1.png"
 import product_img2 from "./product_img2.png"
 import product_img3 from "./product_img3.png"
@@ -244,11 +245,30 @@ export const productDummyData = [
     }
 ];
 
+
+
 export const ourSpecsData = [
-    { title: "Free Shipping", description: "Enjoy fast, free delivery on every order no conditions, just reliable doorstep.", icon: SendIcon, accent: '#05DF72' },
-    { title: "7 Days easy Return", description: "Change your mind? No worries. Return any item within 7 days.", icon: ClockFadingIcon, accent: '#FF8904' },
-    { title: "24/7 Customer Support", description: "We're here for you. Get expert help with our customer support.", icon: HeadsetIcon, accent: '#A684FF' }
+  {
+    title: "Deals That Actually Matter",
+    description: "Products worth your money, tracked across platforms.",
+    icon: BadgePercent,
+    accent: "#05DF72",
+  },
+  {
+    title: "Research, Not Rewrites",
+    description: "Every blog is built from comparisons, specs, and real use cases — not copied reviews.",
+    icon: BookOpenCheck,
+    accent: "#FF8904",
+  },
+  {
+    title: "Honest Picks, Always",
+    description: "If a product isn’t worth recommending, it won’t appear here — affiliate or not.",
+    icon: ShieldCheck,
+    accent: "#A684FF",
+  },
 ]
+
+  
 
 export const addressDummyData = {
     id: "addr_1",
