@@ -2,16 +2,19 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
   <url>
-    <loc>https://expressdeal.vercel.app</loc>
-    <changefreq>daily</changefreq>
-    <priority>1.0</priority>
-  </url>
+  <loc>https://expressdeal.vercel.app</loc>
+  <lastmod>2026-01-02T09:30:00Z</lastmod>
+  <changefreq>daily</changefreq>
+  <priority>1.0</priority>
+</url>
 
-  <url>
-    <loc>https://expressdeal.vercel.app/categories</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
+<url>
+  <loc>https://expressdeal.vercel.app/categories</loc>
+  <lastmod>2026-01-02T09:30:00Z</lastmod>
+  <changefreq>daily</changefreq>
+  <priority>0.8</priority>
+</url>
+
 
   <url>
     <loc>https://expressdeal.vercel.app/category/earphones</loc>
