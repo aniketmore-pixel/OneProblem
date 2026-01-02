@@ -1,6 +1,6 @@
 import fs from 'fs'
-import { getCategories } from '../lib/queries/categories'
-import { getAllBlogs } from '@/lib/queries/blogs'
+import { getCategories } from '../lib/queries/categories.js'
+import { getAllBlogs } from '@/lib/queries/blogs.js'
 
 async function generateSitemap() {
   const baseUrl = 'https://expressdeal.vercel.app'
