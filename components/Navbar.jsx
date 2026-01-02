@@ -485,22 +485,34 @@ const Navbar = () => {
             setShowDropdown(false);
             return;
         }
-
+    
         const fetchResults = async () => {
             try {
                 const res = await fetch(`/api/blogs/search?q=${encodeURIComponent(search)}`);
-                const data = await res.json();
-                setResults(data);
-                setShowDropdown(true);
+                const json = await res.json();
+                setResults(json.data || []);
+                setShowDropdown(json.data?.length > 0); // hide if empty
             } catch (err) {
                 console.error(err);
+                setResults([]);
+                setShowDropdown(false);
             }
         };
-
+    
         const timer = setTimeout(fetchResults, 200);
         return () => clearTimeout(timer);
     }, [search]);
 
+    useEffect(() => {
+        const handleClickOutside = (e) => {
+            if (!e.target.closest('.search-dropdown') && !e.target.closest('input')) {
+                setShowDropdown(false);
+            }
+        };
+        document.addEventListener('click', handleClickOutside);
+        return () => document.removeEventListener('click', handleClickOutside);
+    }, []);
+    
     const handleSearch = (e) => {
         e.preventDefault();
         if (!search.trim()) return;

@@ -1,26 +1,30 @@
-// app/api/blogs/search/route.js
-import { NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { supabaseServer } from '@/lib/supabase-server'
 
 export async function GET(req) {
-  const { searchParams } = new URL(req.url);
-  const query = searchParams.get('q') || '';
+  try {
+    const { searchParams } = new URL(req.url)
+    const query = searchParams.get('q') || ''
 
-  if (!query) {
-    return NextResponse.json([], { status: 200 });
+    console.log('[API] Searching blogs for query:', query)
+
+    const { data, error } = await supabaseServer
+      .from('blogs')
+      .select('blog_id, title, slug, featured_image')
+      .ilike('title', `%${query}%`)
+      .order('created_at', { ascending: false })
+
+    if (error) {
+      console.error('[Supabase Error]', error)
+      return new Response(JSON.stringify({ error: error.message }), { status: 500 })
+    }
+
+    console.log('[Supabase Data]', data)
+
+    return new Response(JSON.stringify({ data }), {
+      headers: { 'Content-Type': 'application/json' },
+    })
+  } catch (err) {
+    console.error('[API Error]', err)
+    return new Response(JSON.stringify({ error: 'Internal Server Error' }), { status: 500 })
   }
-
-  const { data, error } = await supabase
-    .from('blogs')
-    .select('blog_id, title, slug, featured_image')
-    .ilike('title', `%${query}%`) // case-insensitive search
-    .order('created_at', { ascending: false })
-    .limit(5); // top 5 results
-
-  if (error) {
-    console.error('Supabase search error:', error);
-    return NextResponse.json([], { status: 500 });
-  }
-
-  return NextResponse.json(data);
 }
