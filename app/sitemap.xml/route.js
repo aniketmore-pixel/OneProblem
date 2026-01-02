@@ -1,75 +1,68 @@
-
-export const dynamic = 'force-dynamic'
-
-
+// app/sitemap.xml/route.js
 import { getCategories } from '@/lib/queries/categories'
-import { getAllBlogs } from '@/lib/queries/sitemap' // 👈 create this
+import { getAllBlogs } from '@/lib/queries/blogs'
 
+export const dynamic = 'force-dynamic' // ensures it runs at request time
 
 export async function GET() {
-  const baseUrl = 'https://expressdeal.vercel.app'
+  try {
+    const baseUrl = 'https://expressdeal.vercel.app'
 
-  const categories = await getCategories()
-  const blogs = await getAllBlogs()
+    // fetch dynamic data inside the async function
+    const categories = await getCategories()
+    const blogs = await getAllBlogs()
 
-  const urls = [
-    {
-      loc: `${baseUrl}`,
-      changefreq: 'daily',
-      priority: 1.0,
-    },
-    {
-      loc: `${baseUrl}/categories`,
-      changefreq: 'daily',
-      priority: 0.8,
-    },
-    {
-      loc: `${baseUrl}/blog`,
-      changefreq: 'daily',
-      priority: 0.8,
-    },
+    const urls = [
+      `
+      <url>
+        <loc>${baseUrl}</loc>
+        <changefreq>daily</changefreq>
+        <priority>1.0</priority>
+      </url>
+      `,
+      `
+      <url>
+        <loc>${baseUrl}/categories</loc>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+      `,
+    ]
+
     categories.forEach(cat => {
-        urls.push(`
-          <url>
-            <loc>${baseUrl}/category/${cat.slug}</loc>
-            <lastmod>${new Date().toISOString()}</lastmod>
-            <changefreq>daily</changefreq>
-            <priority>0.7</priority>
-          </url>
-        `)
-      }),
-      
-      blogs.forEach(blog => {
-        urls.push(`
-          <url>
-            <loc>${baseUrl}/blog/${blog.slug}</loc>
-            <lastmod>${blog.updated_at ?? new Date().toISOString()}</lastmod>
-            <changefreq>weekly</changefreq>
-            <priority>0.6</priority>
-          </url>
-        `)
-      })
-      
-  ]
+      urls.push(`
+        <url>
+          <loc>${baseUrl}/category/${cat.slug}</loc>
+          <lastmod>${new Date(cat.updated_at || cat.created_at).toISOString()}</lastmod>
+          <changefreq>daily</changefreq>
+          <priority>0.7</priority>
+        </url>
+      `)
+    })
 
-  const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${urls
-  .map(
-    url => `
-  <url>
-    <loc>${url.loc}</loc>
-    <lastmod>${new Date(url.lastmod || Date.now()).toISOString()}</lastmod>
-    <changefreq>${url.changefreq}</changefreq>
-    <priority>${url.priority}</priority>
-  </url>`
-  )
-  .join('')}
-</urlset>`
+    blogs.forEach(blog => {
+      urls.push(`
+        <url>
+          <loc>${baseUrl}/blog/${blog.slug}</loc>
+          <lastmod>${new Date(blog.updated_at || blog.created_at).toISOString()}</lastmod>
+          <changefreq>weekly</changefreq>
+          <priority>0.6</priority>
+        </url>
+      `)
+    })
 
-  return new Response(sitemap, {
-    headers: {
-      'Content-Type': 'application/xml',
-    },
-  })
+    const xml = `<?xml version="1.0" encoding="UTF-8"?>
+    <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+      ${urls.join('')}
+    </urlset>`
+
+    return new Response(xml, {
+      headers: {
+        'Content-Type': 'application/xml',
+      },
+    })
+  } catch (err) {
+    console.error('Error generating sitemap:', err)
+    return new Response('Internal Server Error', { status: 500 })
+  }
 }
