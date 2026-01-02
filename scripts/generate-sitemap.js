@@ -1,6 +1,9 @@
 import fs from 'fs'
+import path from 'path'
+
+// Use relative paths for Node scripts
 import { getCategories } from '../lib/queries/categories.js'
-import { getAllBlogs } from '@/lib/queries/blogs.js'
+import { getAllBlogs } from '../lib/queries/blogs.js'
 
 async function generateSitemap() {
   const baseUrl = 'https://expressdeal.vercel.app'
@@ -38,8 +41,10 @@ async function generateSitemap() {
 ${urls.join('')}
 </urlset>`
 
-  fs.writeFileSync('public/sitemap.xml', xml)
-  console.log('✅ Sitemap generated at public/sitemap.xml')
+  // Ensure correct path to public folder
+  const sitemapPath = path.join(process.cwd(), 'public', 'sitemap.xml')
+  fs.writeFileSync(sitemapPath, xml)
+  console.log('✅ Sitemap generated at', sitemapPath)
 }
 
 generateSitemap()
