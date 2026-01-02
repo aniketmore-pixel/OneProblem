@@ -1,5 +1,10 @@
+
+export const dynamic = 'force-dynamic'
+
+
 import { getCategories } from '@/lib/queries/categories'
 import { getAllBlogs } from '@/lib/queries/sitemap' // 👈 create this
+
 
 export async function GET() {
   const baseUrl = 'https://expressdeal.vercel.app'
