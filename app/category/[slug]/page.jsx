@@ -54,7 +54,7 @@ import { getCategoryBySlug, getBlogsByCategory } from '@/lib/queries/categories'
 import CategoryClient from './CategoryClient'
 
 export const metadata = {
-  title: 'Category | SmartBuy',
+  title: 'Category | ExpressDeal',
   description: 'Browse blogs by category',
 }
 

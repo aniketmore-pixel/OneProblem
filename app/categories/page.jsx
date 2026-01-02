@@ -4,7 +4,7 @@ import { getCategories } from '@/lib/queries/categories'
 import CategoriesClient from './CategoriesClient'
 
 export const metadata = {
-  title: 'Categories | SmartBuy',
+  title: 'Categories | ExpressDeal',
   description: 'Browse blogs by category',
 }
 

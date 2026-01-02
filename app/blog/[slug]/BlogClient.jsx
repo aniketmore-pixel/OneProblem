@@ -11,7 +11,17 @@ import FavoriteButton from '@/components/FavoriteButton'
 
 export default function BlogClient({ blog }) {
     const [readingProgress, setReadingProgress] = useState(0)
+    const [loading, setLoading] = useState(false)
     const [toc, setToc] = useState([])
+
+    const handleNavigation = (href) => {
+        setLoading(true)
+        // optional UX delay for loader visibility
+        setTimeout(() => {
+            window.location.href = href
+        }, 100) // can be 100-300ms
+    }
+
 
     /* 🔹 Reading progress bar */
     useEffect(() => {
@@ -81,13 +91,21 @@ export default function BlogClient({ blog }) {
                 <div className="max-w-7xl mx-auto px-6 py-16 grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-16">
                     {/* CONTENT */}
                     <div>
-                        <Link
-                            href={blog.categories?.slug ? `/category/${blog.categories.slug}` : '/blog'}
+                        {/* Back to category */}
+                        <button
+                            onClick={() =>
+                                handleNavigation(
+                                    blog.categories?.slug
+                                        ? `/category/${blog.categories.slug}`
+                                        : '/blog'
+                                )
+                            }
                             className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-gray-800 mb-6"
                         >
                             <ArrowLeftIcon size={16} />
                             Back to {blog.categories?.name || 'Blogs'}
-                        </Link>
+                        </button>
+
 
                         <p className="text-xs uppercase tracking-widest text-green-600 font-semibold mb-4">
                             {blog.categories?.name}
@@ -130,17 +148,20 @@ export default function BlogClient({ blog }) {
                                 Want more like this?
                             </h3>
 
-                            <Link
-                                href={
-                                    blog.categories?.slug
-                                        ? `/category/${blog.categories.slug}`
-                                        : '/blog'
+                            <button
+                                onClick={() =>
+                                    handleNavigation(
+                                        blog.categories?.slug
+                                            ? `/category/${blog.categories.slug}`
+                                            : '/blog'
+                                    )
                                 }
                                 className="inline-flex items-center gap-2 text-green-600 font-medium hover:underline"
                             >
                                 Explore more from {blog.categories?.name || 'Blogs'}
                                 <ArrowRightIcon size={16} />
-                            </Link>
+                            </button>
+
                         </div>
                     </div>
 
@@ -167,6 +188,17 @@ export default function BlogClient({ blog }) {
                             </div>
                         </aside>
                     )}
+
+{loading && (
+  <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/40">
+
+    <div className="w-12 h-12 border-4 border-green-600 border-t-transparent rounded-full animate-spin mb-4"></div>
+    <p className="text-white text-lg font-medium">
+      Loading...
+    </p>
+  </div>
+)}
+
                 </div>
             </article>
         </>

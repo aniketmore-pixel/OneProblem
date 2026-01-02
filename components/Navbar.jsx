@@ -468,6 +468,8 @@ const Navbar = () => {
     const [showModal, setShowModal] = useState(false);
     const [isSignup, setIsSignup] = useState(false);
     const [username, setUsername] = useState('');
+    const [loading, setLoading] = useState(false);
+
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [user, setUser] = useState(null);
@@ -485,9 +487,11 @@ const Navbar = () => {
             setShowDropdown(false);
             return;
         }
-    
+
         const fetchResults = async () => {
             try {
+
+
                 const res = await fetch(`/api/blogs/search?q=${encodeURIComponent(search)}`);
                 const json = await res.json();
                 setResults(json.data || []);
@@ -498,7 +502,7 @@ const Navbar = () => {
                 setShowDropdown(false);
             }
         };
-    
+
         const timer = setTimeout(fetchResults, 200);
         return () => clearTimeout(timer);
     }, [search]);
@@ -512,7 +516,7 @@ const Navbar = () => {
         document.addEventListener('click', handleClickOutside);
         return () => document.removeEventListener('click', handleClickOutside);
     }, []);
-    
+
     const handleSearch = (e) => {
         e.preventDefault();
         if (!search.trim()) return;
@@ -523,12 +527,16 @@ const Navbar = () => {
 
     const handleLogin = async () => {
         setError('');
+        setLoading(true);
+
         const res = await fetch('/api/auth/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username, password }),
         });
         const data = await res.json();
+
+        setLoading(false);
 
         if (!res.ok) {
             setError(data.error || 'Invalid credentials');
@@ -544,12 +552,16 @@ const Navbar = () => {
 
     const handleSignup = async () => {
         setError('');
+        setLoading(true);
+
         const res = await fetch('/api/auth/signup', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username, password }),
         });
         const data = await res.json();
+
+        setLoading(false);
 
         if (!res.ok) {
             setError(data.error || 'Signup failed');
@@ -584,9 +596,37 @@ const Navbar = () => {
                     {/* DESKTOP MENU */}
                     <div className="hidden sm:flex items-center gap-4 lg:gap-8 text-slate-600">
                         <Link href="/">Home</Link>
-                        <Link href="/categories">Categories</Link>
-                        <Link href="/about">About</Link>
-                        <Link href="/contact">Contact</Link>
+                        <button
+                            onClick={async () => {
+                                setLoading(true);
+                                await new Promise(r => setTimeout(r, 100)); // optional small delay for UX
+                                router.push('/categories');
+                            }}
+                            className="text-slate-600 hover:text-slate-900"
+                        >
+                            Categories
+                        </button>
+
+                        <button
+                            onClick={async () => {
+                                setLoading(true);
+                                await new Promise(r => setTimeout(r, 100)); // optional small delay for UX
+                                router.push('/about');
+                            }}
+                            className="text-slate-600 hover:text-slate-900"
+                        >
+                            About
+                        </button>
+                        <button
+                            onClick={async () => {
+                                setLoading(true);
+                                await new Promise(r => setTimeout(r, 100)); // optional small delay for UX
+                                router.push('/contact');
+                            }}
+                            className="text-slate-600 hover:text-slate-900"
+                        >
+                            Contact
+                        </button>
 
                         {/* Search */}
                         <form
@@ -771,75 +811,86 @@ const Navbar = () => {
 
             {/* LOGIN / SIGNUP MODAL (UNCHANGED) */}
             {showModal && (
-  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-    <div className="bg-white rounded-2xl w-full max-w-md p-8 relative shadow-lg animate-fadeIn">
-      <button
-        onClick={() => setShowModal(false)}
-        className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 font-bold text-lg"
-      >
-        ✕
-      </button>
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+                    <div className="bg-white rounded-2xl w-full max-w-md p-8 relative shadow-lg animate-fadeIn">
+                        <button
+                            onClick={() => setShowModal(false)}
+                            className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 font-bold text-lg"
+                        >
+                            ✕
+                        </button>
 
-      <h3 className="text-2xl font-bold mb-2">
-        {isSignup ? 'Create an account' : 'Welcome back'}
-      </h3>
+                        <h3 className="text-2xl font-bold mb-2">
+                            {isSignup ? 'Create an account' : 'Welcome back'}
+                        </h3>
 
-      <p className="text-gray-500 mb-6 text-sm">
-        {isSignup
-          ? 'Join to save deals and recommendations'
-          : 'Login to access your saved picks'}
-      </p>
+                        <p className="text-gray-500 mb-6 text-sm">
+                            {isSignup
+                                ? 'Join to save deals and recommendations'
+                                : 'Login to access your saved picks'}
+                        </p>
 
-      {error && <p className="text-red-500 text-sm mb-3">{error}</p>}
+                        {error && <p className="text-red-500 text-sm mb-3">{error}</p>}
 
-      <input
-        placeholder="Username"
-        value={username}
-        onChange={e => setUsername(e.target.value)}
-        className="w-full mb-3 p-3 rounded-lg border focus:ring-2 focus:ring-green-500 outline-none"
-      />
+                        <input
+                            placeholder="Username"
+                            value={username}
+                            onChange={e => setUsername(e.target.value)}
+                            className="w-full mb-3 p-3 rounded-lg border focus:ring-2 focus:ring-green-500 outline-none"
+                        />
 
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={e => setPassword(e.target.value)}
-        className="w-full mb-4 p-3 rounded-lg border focus:ring-2 focus:ring-green-500 outline-none"
-      />
+                        <input
+                            type="password"
+                            placeholder="Password"
+                            value={password}
+                            onChange={e => setPassword(e.target.value)}
+                            className="w-full mb-4 p-3 rounded-lg border focus:ring-2 focus:ring-green-500 outline-none"
+                        />
 
-      <button
-        onClick={isSignup ? handleSignup : handleLogin}
-        className="w-full bg-green-600 hover:bg-green-700 text-white p-3 rounded-lg font-medium transition mb-2"
-      >
-        {isSignup ? 'Sign Up' : 'Sign In'}
-      </button>
+                        <button
+                            onClick={isSignup ? handleSignup : handleLogin}
+                            className="w-full bg-green-600 hover:bg-green-700 text-white p-3 rounded-lg font-medium transition mb-2"
+                        >
+                            {isSignup ? 'Sign Up' : 'Sign In'}
+                        </button>
 
-      <p className="text-sm text-center text-gray-600 mt-2">
-        {isSignup ? (
-          <>
-            Already have an account?{' '}
-            <button
-              onClick={() => setIsSignup(false)}
-              className="text-green-600 font-medium hover:underline"
-            >
-              Login
-            </button>
-          </>
-        ) : (
-          <>
-            Don’t have an account?{' '}
-            <button
-              onClick={() => setIsSignup(true)}
-              className="text-green-600 font-medium hover:underline"
-            >
-              Sign up
-            </button>
-          </>
-        )}
-      </p>
-    </div>
-  </div>
-)}
+                        <p className="text-sm text-center text-gray-600 mt-2">
+                            {isSignup ? (
+                                <>
+                                    Already have an account?{' '}
+                                    <button
+                                        onClick={() => setIsSignup(false)}
+                                        className="text-green-600 font-medium hover:underline"
+                                    >
+                                        Login
+                                    </button>
+                                </>
+                            ) : (
+                                <>
+                                    Don’t have an account?{' '}
+                                    <button
+                                        onClick={() => setIsSignup(true)}
+                                        className="text-green-600 font-medium hover:underline"
+                                    >
+                                        Sign up
+                                    </button>
+                                </>
+                            )}
+                        </p>
+                    </div>
+                </div>
+            )}
+
+            {/* LOADING SPINNER */}
+            {loading && (
+                <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/40">
+                    <div className="flex flex-col items-center gap-4">
+                        <div className="w-12 h-12 border-4 border-t-4 border-green-600 border-t-transparent rounded-full animate-spin"></div>
+                        <p className="text-white text-lg font-medium">Loading...</p>
+                    </div>
+                </div>
+            )}
+
 
         </nav>
     );
