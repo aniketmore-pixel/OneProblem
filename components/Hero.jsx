@@ -2,6 +2,7 @@
 
 import { SupabaseClient } from '@supabase/supabase-js';
 import { useRouter } from 'next/navigation';
+
 import { supabase } from '@/lib/supabaseClient';
 import { getTrendingBlogs } from '@/lib/queries/blogs';
 import { ArrowRightIcon, ChevronRightIcon } from 'lucide-react'
@@ -16,6 +17,7 @@ const Hero = () => {
   const [collections, setCollections] = useState([])
   const [loading, setLoading] = useState(true)
   const [announcements, setAnnouncements] = useState([]);
+  const [loadingBlogId, setLoadingBlogId] = useState(null)
 
   const [showModal, setShowModal] = useState(false)
   const [isSignup, setIsSignup] = useState(false)
@@ -33,6 +35,14 @@ const Hero = () => {
     setLoading(true);           // show spinner
     await new Promise(r => setTimeout(r, 200)); // optional delay for UX
     router.push(url);           // navigate
+  }
+
+  const handleBlogNavigation = (slug, blogId) => {
+    setLoadingBlogId(blogId)
+    // optional UX delay for spinner
+    setTimeout(() => {
+      router.push(`/blog/${slug}`)
+    }, 100) // can be 100-300ms
   }
 
 
@@ -182,51 +192,59 @@ const Hero = () => {
         </div>
       </div>
 
-      <section className="max-w-7xl mx-auto py-12 px-4">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-semibold">Trending</h2>
-          {/* <Link
-      href="/blog"
-      className="text-sm text-green-600 hover:underline font-medium"
-    >
-      View all →
-    </Link> */}
-        </div>
+      <section className="max-w-7xl mx-auto py-12 px-4 relative">
+  <div className="flex items-center justify-between mb-6">
+    <h2 className="text-2xl font-semibold">Trending</h2>
+  </div>
 
-        <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
-          {trendingBlogs.map(blog => (
-            <Link
-              key={blog.blog_id}
-              href={`/blog/${blog.slug}`}
-              className="group bg-white rounded-2xl p-6 border border-gray-650 transition"
-            >
-              {/* Image */}
-              {blog.featured_image && (
-                <img
-                  src={blog.featured_image}
-                  alt={blog.title}
-                  className="w-full h-40 object-cover rounded-lg mb-4"
-                />
-              )}
+  <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
+    {trendingBlogs.map(blog => (
+      <button
+        key={blog.blog_id}
+        onClick={() => handleBlogNavigation(blog.slug, blog.blog_id)}
+        className="group relative bg-white rounded-2xl p-6 border border-slate-900 transition text-left w-full"
+        disabled={loadingBlogId === blog.blog_id}
+      >
+        {/* Card content */}
+        {blog.featured_image && (
+          <img
+            src={blog.featured_image}
+            alt={blog.title}
+            className="w-full h-40 object-cover rounded-lg mb-4"
+          />
+        )}
 
-              {/* Title */}
-              <h3 className="text-xl font-semibold mb-2 group-hover:text-green-600">
-                {blog.title}
-              </h3>
+        <h3 className="text-xl font-semibold mb-2 group-hover:text-green-600">
+          {blog.title}
+        </h3>
 
-              {/* Summary */}
-              <p className="text-sm text-gray-500">{blog.summary}</p>
+        <p className="text-sm text-gray-500">
+          {loadingBlogId === blog.blog_id
+            ? 'Hold tight, redirecting you to the blog...'
+            : blog.summary}
+        </p>
 
-              {/* Optional read time / CTA */}
-              {blog.read_time && (
-                <p className="text-xs text-gray-400 mt-1">
-                  Read time: {blog.read_time} min
-                </p>
-              )}
-            </Link>
-          ))}
-        </div>
-      </section>
+        {blog.read_time && (
+          <p className="text-xs text-gray-400 mt-1">
+            Read time: {blog.read_time} min
+          </p>
+        )}
+
+        {/* Card loader: styled exactly like CategoryClient */}
+        {loadingBlogId === blog.blog_id && (
+          <div className="absolute inset-0 bg-white/80 flex flex-col items-center justify-center rounded-2xl">
+            <div className="w-4 h-4 border-2 border-green-600 border-t-transparent rounded-full animate-spin mb-2"></div>
+            <span className="text-green-600 text-sm font-medium">
+              Hold tight, redirecting you to the blog...
+            </span>
+          </div>
+        )}
+      </button>
+    ))}
+  </div>
+</section>
+
+      
 
 
 
