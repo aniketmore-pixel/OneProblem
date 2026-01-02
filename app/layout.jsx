@@ -77,7 +77,19 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
+
+
       <body className={`${outfit.className} antialiased`}>
+     
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-HX12PCXF3D"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-HX12PCXF3D');
+</script>
+
         <script
           dangerouslySetInnerHTML={{
             __html: `
