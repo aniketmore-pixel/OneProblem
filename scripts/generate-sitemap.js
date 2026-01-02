@@ -1,5 +1,5 @@
 import fs from 'fs'
-import { getCategories } from '@/lib/queries/categories'
+import { getCategories } from '../lib/queries/categories'
 import { getAllBlogs } from '@/lib/queries/blogs'
 
 async function generateSitemap() {
