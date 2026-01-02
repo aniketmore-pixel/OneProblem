@@ -6,7 +6,6 @@ import { getTrendingBlogs } from '@/lib/queries/blogs';
 import { ArrowRightIcon, ChevronRightIcon } from 'lucide-react'
 import { ShoppingCart, BookOpen, CreditCard } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
-import CategoriesMarquee from './CategoriesMarquee'
 import Link from 'next/link'
 import Image from "next/image";
 import heroImage from "@/assets/hero-image.png"; // 1200x1200 image
