@@ -3,6 +3,8 @@ import { ArrowLeft } from 'lucide-react'
 import { getCategories } from '@/lib/queries/categories'
 import CategoriesClient from './CategoriesClient'
 
+export const dynamic = 'force-dynamic'
+
 export const metadata = {
   title: 'Categories | ExpressDeal',
   description: 'Browse blogs by category',
