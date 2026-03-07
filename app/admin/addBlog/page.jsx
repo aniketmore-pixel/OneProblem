@@ -368,7 +368,7 @@ export default function AdminAddBlogPage() {
   const [summary, setSummary] = useState('')
   const [categoryId, setCategoryId] = useState('')
   const [featuredImage, setFeaturedImage] = useState('')
-  const [isTrending, setIsTrending] = useState(false) // ✅ Trending
+  const [isTrending, setIsTrending] = useState(false) 
 
   // Affiliate links state (up to 5)
   const [affiliateLinks, setAffiliateLinks] = useState([
@@ -400,7 +400,7 @@ export default function AdminAddBlogPage() {
     setSummary(blog.summary || '')
     setCategoryId(blog.category_id?.toString() || '')
     setFeaturedImage(blog.featured_image || '')
-    setIsTrending(blog.is_trending || false) // ✅ Set trending state
+    setIsTrending(blog.is_trending || false) 
     setBlocks(blog.content?.blocks || [])
     setAffiliateLinks([
       { title: blog.affiliate_1_title || '', url: blog.affiliate_1_url || '' },
@@ -409,7 +409,7 @@ export default function AdminAddBlogPage() {
       { title: blog.affiliate_4_title || '', url: blog.affiliate_4_url || '' },
       { title: blog.affiliate_5_title || '', url: blog.affiliate_5_url || '' },
     ])
-    window.scrollTo({ top: 0, behavior: 'smooth' }) // scroll to form
+    window.scrollTo({ top: 0, behavior: 'smooth' }) 
   }
 
   function updateAffiliateLink(index, field, value) {
@@ -426,9 +426,15 @@ export default function AdminAddBlogPage() {
     setBlocks([...blocks, { type: 'paragraph', text: '' }])
   }
 
-  function updateBlock(index, value) {
+  // ✅ New helper to add an image block
+  function addImage() {
+    setBlocks([...blocks, { type: 'image', url: '', alt: '' }])
+  }
+
+  // ✅ Modified to handle any field (text, url, alt) dynamically
+  function updateBlock(index, field, value) {
     const updated = [...blocks]
-    updated[index].text = value
+    updated[index][field] = value
     setBlocks(updated)
   }
 
@@ -482,7 +488,13 @@ export default function AdminAddBlogPage() {
       return
     }
 
-    const contentJson = { blocks: blocks.filter(b => b.text.trim() !== '') }
+    // ✅ Adjusted filter so it doesn't strip out valid image blocks
+    const contentJson = { 
+      blocks: blocks.filter(b => {
+        if (b.type === 'image') return b.url?.trim() !== ''
+        return b.text?.trim() !== ''
+      }) 
+    }
 
     const payload = {
       title: title.trim(),
@@ -491,7 +503,7 @@ export default function AdminAddBlogPage() {
       category_id: Number(categoryId),
       featured_image: featuredImage || null,
       content: contentJson,
-      is_trending: isTrending, // ✅ include trending
+      is_trending: isTrending, 
       affiliate_1_title: affiliateLinks[0].title || null,
       affiliate_1_url: affiliateLinks[0].url || null,
       affiliate_2_title: affiliateLinks[1].title || null,
@@ -542,7 +554,7 @@ export default function AdminAddBlogPage() {
     setCategoryId('')
     setFeaturedImage('')
     setBlocks([])
-    setIsTrending(false) // ✅ reset trending
+    setIsTrending(false) 
     setAffiliateLinks([
       { title: '', url: '' },
       { title: '', url: '' },
@@ -604,7 +616,6 @@ export default function AdminAddBlogPage() {
           className="w-full border px-4 py-2 rounded-xl"
         />
 
-        {/* Trending checkbox */}
         <label className="flex items-center gap-2">
           <input
             type="checkbox"
@@ -618,39 +629,76 @@ export default function AdminAddBlogPage() {
         {/* CONTENT EDITOR */}
         <div className="border rounded-xl p-4 bg-white">
           <div className="flex gap-2 mb-4">
-            <button onClick={() => addHeading(2)} className="border px-3 py-1 rounded">
+            <button onClick={() => addHeading(2)} className="border px-3 py-1 rounded bg-gray-100 hover:bg-gray-200">
               + Heading
             </button>
-            <button onClick={addParagraph} className="border px-3 py-1 rounded">
+            <button onClick={addParagraph} className="border px-3 py-1 rounded bg-gray-100 hover:bg-gray-200">
               + Text
+            </button>
+            {/* ✅ Added Image Button */}
+            <button onClick={addImage} className="border px-3 py-1 rounded bg-gray-100 hover:bg-gray-200">
+              + Image
             </button>
           </div>
 
           <div className="space-y-4">
             {blocks.map((block, i) => (
-              <div key={i}>
-                {block.type === 'heading' ? (
+              <div key={i} className="relative bg-gray-50 border p-3 rounded-xl shadow-sm">
+                
+                {block.type === 'heading' && (
                   <input
                     placeholder={`Heading (H${block.level})`}
-                    value={block.text}
-                    onChange={e => updateBlock(i, e.target.value)}
+                    value={block.text || ''}
+                    onChange={e => updateBlock(i, 'text', e.target.value)}
                     className="w-full border px-3 py-2 rounded text-lg font-semibold"
                   />
-                ) : (
+                )}
+
+                {block.type === 'paragraph' && (
                   <textarea
                     placeholder="Paragraph text…"
-                    value={block.text}
-                    onChange={e => updateBlock(i, e.target.value)}
+                    value={block.text || ''}
+                    onChange={e => updateBlock(i, 'text', e.target.value)}
                     className="w-full border px-3 py-2 rounded h-24"
                   />
                 )}
 
-                <button
-                  onClick={() => removeBlock(i)}
-                  className="text-sm text-red-500 mt-1"
-                >
-                  Remove
-                </button>
+                {/* ✅ Added Image Block UI */}
+                {block.type === 'image' && (
+                  <div className="flex flex-col gap-2">
+                    <input
+                      placeholder="Image URL"
+                      value={block.url || ''}
+                      onChange={e => updateBlock(i, 'url', e.target.value)}
+                      className="w-full border px-3 py-2 rounded"
+                    />
+                    <input
+                      placeholder="Alt Text (optional)"
+                      value={block.alt || ''}
+                      onChange={e => updateBlock(i, 'alt', e.target.value)}
+                      className="w-full border px-3 py-2 rounded"
+                    />
+                    {block.url && (
+                      <div className="mt-2 bg-white border p-2 rounded">
+                        <img 
+                          src={block.url} 
+                          alt={block.alt || 'Preview'} 
+                          className="max-h-40 object-contain rounded" 
+                          onError={(e) => { e.target.src = 'https://via.placeholder.com/300x150?text=Invalid+Image+URL' }}
+                        />
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                <div className="flex justify-end mt-2">
+                  <button
+                    onClick={() => removeBlock(i)}
+                    className="text-sm text-red-500 font-medium hover:underline"
+                  >
+                    Remove
+                  </button>
+                </div>
               </div>
             ))}
           </div>
@@ -679,7 +727,7 @@ export default function AdminAddBlogPage() {
 
         <button
           onClick={saveBlog}
-          className="bg-green-600 text-white px-6 py-3 rounded-xl hover:bg-green-700 mt-4"
+          className="bg-green-600 text-white px-6 py-3 rounded-xl hover:bg-green-700 mt-4 font-semibold"
         >
           {editingBlogId ? 'Update Blog' : 'Publish Blog'}
         </button>
@@ -692,11 +740,11 @@ export default function AdminAddBlogPage() {
       ) : (
         <ul className="space-y-2">
           {blogs.map(b => (
-            <li key={b.blog_id} className="border p-3 rounded-xl flex justify-between items-center">
-              <span>{b.title}</span>
+            <li key={b.blog_id} className="border p-4 rounded-xl flex justify-between items-center bg-white shadow-sm">
+              <span className="font-medium">{b.title}</span>
               <button
                 onClick={() => editBlog(b)}
-                className="text-blue-600 hover:underline"
+                className="text-blue-600 hover:underline px-3 py-1"
               >
                 Edit
               </button>
@@ -707,4 +755,3 @@ export default function AdminAddBlogPage() {
     </main>
   )
 }
-

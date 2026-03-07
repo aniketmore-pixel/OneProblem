@@ -1,72 +1,3 @@
-// export default function BlogContent({ content, toc }) {
-//     if (!content || !content.blocks || !Array.isArray(content.blocks)) {
-//       return <p className="text-gray-500">No content available.</p>
-//     }
-  
-//     let headingIndex = 0
-  
-//     return (
-//       <div className="prose prose-lg prose-slate max-w-none">
-//         {content.blocks.map((block, i) => {
-//           switch (block.type) {
-//             case 'heading':
-//               const id = `heading-${headingIndex}`
-//               headingIndex++
-//               return (
-//                 <h2 key={i} id={id} className="text-3xl font-bold mt-12 mb-4 scroll-mt-24">
-//                   {block.data.text}
-//                 </h2>
-//               )
-  
-//             case 'paragraph':
-//               return (
-//                 <p key={i} className="text-gray-700 leading-relaxed my-4">
-//                   {block.data.text}
-//                 </p>
-//               )
-  
-//             case 'list':
-//               return block.data.items && Array.isArray(block.data.items) ? (
-//                 <ul
-//                   key={i}
-//                   className="list-disc list-inside my-4 space-y-1 text-gray-700"
-//                 >
-//                   {block.data.items.map((item, idx) => (
-//                     <li key={idx}>{item}</li>
-//                   ))}
-//                 </ul>
-//               ) : null
-  
-//             case 'image':
-//               return block.data.src ? (
-//                 <img
-//                   key={i}
-//                   src={block.data.src}
-//                   alt={block.data.alt || ''}
-//                   className="rounded-xl my-8 w-full object-cover shadow-md"
-//                 />
-//               ) : null
-  
-//             case 'highlight':
-//               return block.data.text ? (
-//                 <div
-//                   key={i}
-//                   className="bg-green-50 border-l-4 border-green-500 p-4 rounded-lg my-6 text-gray-800"
-//                 >
-//                   {block.data.text}
-//                 </div>
-//               ) : null
-  
-//             default:
-//               return null
-//           }
-//         })}
-//       </div>
-//     )
-
-//   }
-  
-
 'use client'
 
 import React from 'react'
@@ -83,16 +14,20 @@ export default function BlogContent({ content }) {
     return (
       <>
         {content.blocks.map((block, i) => {
-          if (!block || !block.type || !block.text?.trim()) return null
+          if (!block || !block.type) return null
 
-          // Generate id for heading (for TOC)
-          const id = block.text
-            .toLowerCase()
-            .replace(/\s+/g, '-')
-            .replace(/[^\w-]/g, '')
+          // Ensure text blocks have text, and image blocks have a URL
+          if (block.type === 'image' && !block.url?.trim()) return null
+          if (block.type !== 'image' && !block.text?.trim()) return null
 
           switch (block.type) {
-            case 'heading':
+            case 'heading': {
+              // Generate id for heading (for TOC) *only* if it's a heading
+              const id = block.text
+                .toLowerCase()
+                .replace(/\s+/g, '-')
+                .replace(/[^\w-]/g, '')
+
               const Tag = `h${block.level || 2}` // default to h2 if level missing
               return (
                 <Tag
@@ -105,12 +40,30 @@ export default function BlogContent({ content }) {
                   {block.text}
                 </Tag>
               )
+            }
 
             case 'paragraph':
               return (
                 <p key={i} className="mb-6 text-gray-700">
                   {block.text}
                 </p>
+              )
+
+            case 'image':
+              return (
+                <figure key={i} className="my-8">
+                  <img
+                    src={block.url}
+                    alt={block.alt || 'Blog image'}
+                    className="w-full rounded-2xl object-cover shadow-sm"
+                    loading="lazy"
+                  />
+                  {block.alt && (
+                    <figcaption className="text-center text-sm text-gray-500 mt-2">
+                      {block.alt}
+                    </figcaption>
+                  )}
+                </figure>
               )
 
             default:
