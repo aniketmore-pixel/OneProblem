@@ -51,11 +51,11 @@ export default function BlogContent({ content }) {
 
             case 'image':
               return (
-                <figure key={i} className="my-8">
+                <figure key={i} className="my-8 flex flex-col items-center">
                   <img
                     src={block.url}
                     alt={block.alt || 'Blog image'}
-                    className="w-full rounded-2xl object-cover shadow-sm"
+                    className="w-full max-w-[300px] h-auto rounded-2xl shadow-sm object-contain"
                     loading="lazy"
                   />
                   {block.alt && (
