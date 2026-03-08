@@ -22,7 +22,6 @@ export default function BlogClient({ blog }) {
         }, 100) // can be 100-300ms
     }
 
-
     /* 🔹 Reading progress bar */
     useEffect(() => {
         const handleScroll = () => {
@@ -78,11 +77,12 @@ export default function BlogClient({ blog }) {
                 {/* Hero image */}
                 {blog.featured_image && (
                     <div className="max-w-6xl mx-auto px-4 mt-10">
-                        <div className="rounded-3xl overflow-hidden max-h-[65vh]">
+                        {/* 🔹 UPDATED: Flex container, subtle background, and object-contain */}
+                        <div className="rounded-3xl overflow-hidden h-[65vh] bg-gray-50 flex items-center justify-center border border-gray-100">
                             <img
                                 src={blog.featured_image}
                                 alt={blog.title}
-                                className="w-full h-full object-cover"
+                                className="w-full h-full object-contain p-4"
                             />
                         </div>
                     </div>
@@ -189,16 +189,14 @@ export default function BlogClient({ blog }) {
                         </aside>
                     )}
 
-{loading && (
-  <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/40">
-
-    <div className="w-12 h-12 border-4 border-green-600 border-t-transparent rounded-full animate-spin mb-4"></div>
-    <p className="text-white text-lg font-medium">
-      Loading...
-    </p>
-  </div>
-)}
-
+                    {loading && (
+                        <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/40">
+                            <div className="w-12 h-12 border-4 border-green-600 border-t-transparent rounded-full animate-spin mb-4"></div>
+                            <p className="text-white text-lg font-medium">
+                                Loading...
+                            </p>
+                        </div>
+                    )}
                 </div>
             </article>
         </>
