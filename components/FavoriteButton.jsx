@@ -100,23 +100,21 @@ export default function FavoriteButton({ blogId }) {
         <>
             <button
                 onClick={toggleBookmark}
-                className={`px-5 py-2.5 border rounded-full text-sm font-medium
-    flex items-center gap-2 transition
-    ${isBookmarked
-                        ? 'border-green-500 text-green-800 hover:bg-green-100'
-                        : 'border-gray-500 text-gray-600 hover:bg-gray-100'
-                    }
-  `}
+                className="flex flex-col items-center justify-center gap-1.5 px-8 py-3 rounded-[2rem] border border-white text-white hover:bg-white/10 transition-colors group"
             >
                 <Star
-                    size={16}
-                    className={isBookmarked ? 'fill-green-400 text-green-400' : ''}
+                    size={24}
+                    strokeWidth={2}
+                    className={`transition-colors duration-200 ${
+                        isBookmarked 
+                            ? 'fill-white text-white' 
+                            : 'text-white group-hover:fill-white/20'
+                    }`}
                 />
-                {isBookmarked ? 'Starred' : 'Star'}
+                <span className="font-bold text-[15px] tracking-wide">
+                    {isBookmarked ? 'Starred' : 'Star'}
+                </span>
             </button>
-
-
-
 
             <Toast
                 message="Please sign in to bookmark blogs"
