@@ -134,14 +134,10 @@ export default function BlogClient({ blog }) {
                             {blog.summary}
                         </p>
 
-                        <div className="blog-content prose prose-lg lg:prose-xl max-w-none
-[& img]:max-w-[320px]
-[& img]:w-auto
-[& img]:mx-auto
-[& img]:rounded-lg
-[& img]:my-6">
-    <BlogContent content={blog.content} />
-</div>
+                        {/* Blog content */}
+                        <div className="blog-content prose prose-lg lg:prose-xl max-w-none prose-img:max-w-[75%] prose-img:mx-auto prose-img:max-h-[500px] prose-img:object-contain prose-img:rounded-lg">
+                            <BlogContent content={blog.content} />
+                        </div>
 
                         <AffiliateLinks blog={blog} />
 
