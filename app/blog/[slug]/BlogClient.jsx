@@ -135,12 +135,11 @@ export default function BlogClient({ blog }) {
                         </p>
 
                         <div className="blog-content prose prose-lg lg:prose-xl max-w-none
-prose-img:mx-auto
-prose-img:max-w-[260px]
-sm:prose-img:max-w-[320px]
-prose-img:rounded-lg
-prose-img:shadow-sm
-prose-img:my-6">
+[& img]:max-w-[320px]
+[& img]:w-auto
+[& img]:mx-auto
+[& img]:rounded-lg
+[& img]:my-6">
     <BlogContent content={blog.content} />
 </div>
 
