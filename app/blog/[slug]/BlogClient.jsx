@@ -94,7 +94,7 @@ export default function BlogClient({ blog }) {
 
                             <div className="mb-4">
                                 <p className="text-sm font-medium text-white mb-1">
-                                    by <span className="font-bold">{blog.author || 'Editorial Team'}</span>
+                                    by <span className="font-bold">{blog.author || 'ExpressDeal'}</span>
                                 </p>
                                 <div className="text-xs text-green-200 space-y-1">
                                     <p>
