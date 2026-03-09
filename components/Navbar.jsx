@@ -595,7 +595,7 @@ const Navbar = () => {
 
                     {/* DESKTOP MENU */}
                     <div className="hidden sm:flex items-center gap-4 lg:gap-8 text-slate-600">
-                        <Link href="/">Home</Link>
+                        {/* <Link href="/">Home</Link> */}
                         <button
                             onClick={async () => {
                                 setLoading(true);
@@ -710,7 +710,7 @@ const Navbar = () => {
                     {/* Nav Links */}
                     <div className="flex flex-col divide-y text-slate-700">
                         {[
-                            { href: '/', label: 'Home' },
+                            // { href: '/', label: 'Home' },
                             { href: '/categories', label: 'Categories' },
                             { href: '/about', label: 'About' },
                             { href: '/contact', label: 'Contact' },
