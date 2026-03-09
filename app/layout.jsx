@@ -161,7 +161,15 @@ const outfit = Outfit({
 
 export const metadata = {
   title: 'ExpressDeal - shop smarter',
-  description: 'ExpressDeal - shop smarter',
+  description: 'Welcome to ExpressDeal, where finding good deals is simple...',
+  openGraph: {
+    title: 'ExpressDeal - shop smarter',
+    description: 'Welcome to ExpressDeal, where finding good deals is simple...',
+    url: 'https://expressdeal.vercel.app',
+    siteName: 'ExpressDeal', // 
+    locale: 'en_US',
+    type: 'website',
+  },
 }
 
 export default function RootLayout({ children }) {
