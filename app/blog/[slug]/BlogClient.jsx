@@ -76,29 +76,20 @@ export default function BlogClient({ blog }) {
             <article className="bg-white pt-10">
                 {/* Hero image */}
                 {/* Hero image - Cinematic Wrapper */}
+                {/* Hero image - Premium Studio Frame */}
+                {/* Hero image - Standard Clean Banner */}
                 {blog.featured_image && (
                     <div className="max-w-6xl mx-auto px-4 mt-8 md:mt-12">
-                        <div className="relative w-full aspect-[4/3] sm:aspect-video md:aspect-[21/9] rounded-[2.5rem] overflow-hidden bg-slate-950 border border-slate-100 shadow-2xl shadow-slate-200/50 group">
-                            
-                            {/* 1. Blurred Background Layer (Fills the awkward empty space) */}
-                            <div 
-                                className="absolute inset-0 bg-cover bg-center opacity-40 blur-[40px] scale-125 saturate-150 transition-transform duration-1000 group-hover:scale-150"
-                                style={{ backgroundImage: `url(${blog.featured_image})` }}
-                            />
-
-                            {/* 2. Subtle gradient overlay to make the image pop */}
-                            <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 to-transparent z-0" />
-
-                            {/* 3. Actual Image Layer (Uncropped, properly contained) */}
+                        {/* Constrain height strictly so it doesn't take up the whole screen */}
+                        <div className="w-full h-64 sm:h-80 md:h-96 rounded-[2rem] overflow-hidden border border-slate-100 shadow-xl shadow-slate-200/40 bg-slate-50">
                             <img
                                 src={blog.featured_image}
                                 alt={blog.title}
-                                className="relative z-10 w-full h-full object-contain p-2 sm:p-4 drop-shadow-2xl transition-transform duration-700 group-hover:scale-[1.02]"
+                                className="w-full h-full object-cover"
                             />
                         </div>
                     </div>
                 )}
-
                 <div className="max-w-7xl mx-auto px-6 py-16 grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-16">
                     {/* CONTENT */}
                     <div>
