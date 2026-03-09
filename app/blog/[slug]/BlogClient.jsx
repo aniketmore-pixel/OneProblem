@@ -141,15 +141,15 @@ export default function BlogClient({ blog }) {
                                 {blog.summary}
                             </p>
 
-                            <p className="text-xs italic text-green-200 max-w-2xl">
+                            {/* <p className="text-xs italic text-green-200 max-w-2xl">
                                 If you buy something from an ExpressDeal link, we may earn a commission. 
                                 <a href="#" className="underline ml-1 hover:text-white transition-colors">See our ethics statement.</a>
-                            </p>
+                            </p> */}
                         </div>
                     </div>
                 </header>
                 
-                {/* ✅ HERO IMAGE (More compact height) */}
+                {/* ✅ HERO IMAGE (More compact height)
                 {blog.featured_image && (
                     <div className="w-full bg-green-900 border-b-4 border-gray-100">
                         <img 
@@ -158,7 +158,7 @@ export default function BlogClient({ blog }) {
                             className="w-full max-h-[300px] md:max-h-[400px] object-cover object-center"
                         />
                     </div>
-                )}
+                )} */}
                 
                 {/* 📝 MAIN CONTENT AREA */}
                 <div className="max-w-7xl mx-auto px-6 py-10 grid grid-cols-1 lg:grid-cols-[1fr_260px] gap-12">
