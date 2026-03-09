@@ -75,14 +75,25 @@ export default function BlogClient({ blog }) {
 
             <article className="bg-white pt-10">
                 {/* Hero image */}
+                {/* Hero image - Cinematic Wrapper */}
                 {blog.featured_image && (
-                    <div className="max-w-6xl mx-auto px-4 mt-10">
-                        {/* 🔹 UPDATED: Flex container, subtle background, and object-contain */}
-                        <div className="rounded-3xl overflow-hidden h-[65vh] bg-gray-50 flex items-center justify-center border border-gray-100">
+                    <div className="max-w-6xl mx-auto px-4 mt-8 md:mt-12">
+                        <div className="relative w-full aspect-[4/3] sm:aspect-video md:aspect-[21/9] rounded-[2.5rem] overflow-hidden bg-slate-950 border border-slate-100 shadow-2xl shadow-slate-200/50 group">
+                            
+                            {/* 1. Blurred Background Layer (Fills the awkward empty space) */}
+                            <div 
+                                className="absolute inset-0 bg-cover bg-center opacity-40 blur-[40px] scale-125 saturate-150 transition-transform duration-1000 group-hover:scale-150"
+                                style={{ backgroundImage: `url(${blog.featured_image})` }}
+                            />
+
+                            {/* 2. Subtle gradient overlay to make the image pop */}
+                            <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 to-transparent z-0" />
+
+                            {/* 3. Actual Image Layer (Uncropped, properly contained) */}
                             <img
                                 src={blog.featured_image}
                                 alt={blog.title}
-                                className="w-full h-full object-contain p-4"
+                                className="relative z-10 w-full h-full object-contain p-2 sm:p-4 drop-shadow-2xl transition-transform duration-700 group-hover:scale-[1.02]"
                             />
                         </div>
                     </div>
