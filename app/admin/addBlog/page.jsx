@@ -70,9 +70,8 @@ export default function AdminAddBlogPage() {
     setBlocks(blocks.filter((_, i) => i !== index))
   }
 
-  // ✅ New helper: Move block UP
   function moveBlockUp(index) {
-    if (index === 0) return // Already at the top
+    if (index === 0) return 
     const updated = [...blocks]
     const temp = updated[index - 1]
     updated[index - 1] = updated[index]
@@ -80,14 +79,20 @@ export default function AdminAddBlogPage() {
     setBlocks(updated)
   }
 
-  // ✅ New helper: Move block DOWN
   function moveBlockDown(index) {
-    if (index === blocks.length - 1) return // Already at the bottom
+    if (index === blocks.length - 1) return 
     const updated = [...blocks]
     const temp = updated[index + 1]
     updated[index + 1] = updated[index]
     updated[index] = temp
     setBlocks(updated)
+  }
+
+  // ✅ Restored Affiliate Link Helper
+  function updateAffiliateLink(index, field, value) {
+    const updated = [...affiliateLinks]
+    updated[index][field] = value
+    setAffiliateLinks(updated)
   }
 
   // ---------------------------
@@ -285,7 +290,28 @@ export default function AdminAddBlogPage() {
           </div>
         </div>
 
-        <button onClick={saveBlog} className="w-full bg-green-600 text-white py-4 rounded-xl hover:bg-green-700 font-bold shadow-lg shadow-green-100 transition-all active:scale-[0.98]">
+        {/* ✅ RESTORED AFFILIATE LINKS */}
+        <div className="border rounded-xl p-4 bg-white mt-6">
+          <h3 className="font-semibold mb-4 text-gray-800">Affiliate Links (optional)</h3>
+          {affiliateLinks.map((link, i) => (
+            <div key={i} className="flex flex-col sm:flex-row gap-2 mb-3">
+              <input
+                placeholder={`Affiliate ${i + 1} Title`}
+                value={link.title}
+                onChange={e => updateAffiliateLink(i, 'title', e.target.value)}
+                className="w-full sm:w-1/2 border px-3 py-2 rounded-lg outline-none focus:ring-1 focus:ring-green-500"
+              />
+              <input
+                placeholder={`Affiliate ${i + 1} URL`}
+                value={link.url}
+                onChange={e => updateAffiliateLink(i, 'url', e.target.value)}
+                className="w-full sm:w-1/2 border px-3 py-2 rounded-lg outline-none focus:ring-1 focus:ring-green-500"
+              />
+            </div>
+          ))}
+        </div>
+
+        <button onClick={saveBlog} className="w-full bg-green-600 text-white py-4 rounded-xl hover:bg-green-700 font-bold shadow-lg shadow-green-100 transition-all active:scale-[0.98] mt-6">
           {editingBlogId ? 'Update Blog Post' : 'Publish Blog Post'}
         </button>
       </div>
