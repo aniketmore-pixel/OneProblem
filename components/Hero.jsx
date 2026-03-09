@@ -173,8 +173,7 @@ const Hero = () => {
             </h1>
 
             <p className="text-slate-600 text-lg sm:text-xl max-w-xl text-balance leading-relaxed">
-              We analyze top products from Amazon, Flipkart, and more to help you
-              make confident buying decisions without the clutter.
+            We analyze the best deals across multiple platforms to help you confidently choose anything you can buy online...from products to courses and digital services.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto mt-2">
