@@ -6,7 +6,7 @@ import { calculateReadingTime } from '@/lib/utils/readingTime'
 import ShareButtons from '@/components/ShareButtons'
 import AffiliateLinks from '@/components/AffiliateLinks'
 import Link from 'next/link'
-import { ArrowRightIcon, Calendar, ArrowLeftIcon, Plus } from 'lucide-react'
+import { ArrowRightIcon, Calendar, ArrowLeftIcon, Plus, BookOpen } from 'lucide-react'
 import FavoriteButton from '@/components/FavoriteButton'
 
 export default function BlogClient({ blog }) {
@@ -65,19 +65,22 @@ export default function BlogClient({ blog }) {
             {/* Progress bar */}
             <div className="fixed top-0 left-0 w-full h-[4px] bg-gray-200 z-50">
                 <div
-                    className="h-full bg-green-500"
+                    className="h-full bg-green-500 transition-all duration-150 ease-out"
                     style={{ width: `${readingProgress}%` }}
                 />
             </div>
 
             <article className="bg-white min-h-screen">
                 
-                {/* 🎨 COMPACT GREEN GRADIENT HEADER */}
-                <header className="bg-gradient-to-br from-green-900 via-green-800 to-green-700 text-white pt-12 pb-8 px-6">
-                    <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-[180px_1fr] lg:grid-cols-[220px_1fr] gap-8">
+                {/* 🎨 EXPANDED TEXT-ONLY HEADER */}
+                <header className="relative bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-green-800 via-green-900 to-black text-white pt-20 pb-16 px-6 overflow-hidden">
+                    {/* Optional subtle decorative element in background */}
+                    <div className="absolute -top-24 -right-24 w-96 h-96 bg-green-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+                    <div className="relative max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-[200px_1fr] lg:grid-cols-[240px_1fr] gap-10">
                         
                         {/* Left Column: Meta, Date, and Sharing */}
-                        <div className="flex flex-col border-b md:border-b-0 md:border-r border-green-600/50 pb-6 md:pb-0 md:pr-6">
+                        <div className="flex flex-col border-b md:border-b-0 md:border-r border-green-700/50 pb-8 md:pb-0 md:pr-8">
                             <button
                                 onClick={() =>
                                     handleNavigation(
@@ -86,32 +89,38 @@ export default function BlogClient({ blog }) {
                                             : '/blog'
                                     )
                                 }
-                                className="inline-flex items-center gap-1.5 text-sm text-green-200 hover:text-white mb-6 transition-colors w-fit"
+                                className="inline-flex items-center gap-1.5 text-sm font-medium text-green-300 hover:text-white mb-8 transition-colors w-fit group"
                             >
-                                <ArrowLeftIcon size={16} />
-                                Back
+                                <ArrowLeftIcon size={16} className="group-hover:-translate-x-1 transition-transform" />
+                                Back to {blog.categories?.name || 'Blog'}
                             </button>
 
-                            <div className="mb-4">
-                                <p className="text-sm font-medium text-white mb-1">
+                            <div className="mb-6">
+                                <p className="text-sm font-medium text-white mb-1.5 flex items-center gap-2">
+                                    <span className="w-6 h-px bg-green-500 inline-block"></span>
                                     by <span className="font-bold">{blog.author || 'Editorial Team'}</span>
                                 </p>
-                                <div className="text-xs text-green-200 space-y-1">
-                                    <p>
+                                <div className="text-sm text-green-300/80 space-y-1.5 pl-8">
+                                    <p className="flex items-center gap-2">
+                                        <Calendar size={14} />
                                         {new Date(publishedDate).toLocaleDateString('en-US', {
-                                            month: 'short',
+                                            month: 'long',
                                             day: 'numeric',
                                             year: 'numeric',
                                         })}
                                     </p>
-                                    <p>⏱ {readingTime}</p>
+                                    <p className="flex items-center gap-2">
+                                        <BookOpen size={14} />
+                                        {readingTime} read
+                                    </p>
                                 </div>
                             </div>
 
                             <div className="flex flex-wrap items-center gap-4 mt-auto">
-                                <div className="flex items-center gap-3 bg-white/10 p-1.5 rounded-xl backdrop-blur-sm">
+                                {/* Adjusted Favorite/Share container for better contrast */}
+                                <div className="flex items-center gap-3 bg-black/30 text-white p-2 rounded-xl border border-green-800/50 backdrop-blur-sm shadow-inner">
                                     <FavoriteButton blogId={blog.blog_id} />
-                                    <div className="w-px h-4 bg-green-400/30"></div>
+                                    <div className="w-px h-5 bg-green-700/50"></div>
                                     <ShareButtons />
                                 </div>
                             </div>
@@ -120,60 +129,47 @@ export default function BlogClient({ blog }) {
                         {/* Right Column: Title and Summary */}
                         <div className="flex flex-col justify-center">
                             {/* Category Tags */}
-                            <div className="flex flex-wrap items-center gap-3 text-xs font-bold uppercase tracking-widest text-green-200 mb-4">
-                                <span className="flex items-center gap-1">
-                                    <Plus size={14} className="text-white" />
+                            <div className="flex flex-wrap items-center gap-3 text-xs font-bold uppercase tracking-widest text-green-400 mb-5">
+                                <span className="flex items-center gap-1 bg-green-900/50 px-2 py-1 rounded-md border border-green-800/50">
                                     {blog.categories?.name || 'Article'}
                                 </span>
                                 {blog.tags && (
-                                    <span className="flex items-center gap-1">
-                                        <Plus size={14} className="text-white" />
+                                    <span className="flex items-center gap-1 bg-green-900/50 px-2 py-1 rounded-md border border-green-800/50">
                                         {blog.tags}
                                     </span>
                                 )}
                             </div>
 
-                            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold mb-4 leading-tight tracking-tight text-white">
+                            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold mb-6 leading-[1.15] tracking-tight text-white max-w-5xl">
                                 {blog.title}
                             </h1>
 
-                            <p className="text-lg lg:text-xl text-green-50 mb-4 max-w-4xl leading-relaxed font-medium">
+                            <p className="text-xl lg:text-2xl text-green-100/90 mb-6 max-w-4xl leading-relaxed font-light">
                                 {blog.summary}
                             </p>
 
-                            <p className="text-xs italic text-green-200 max-w-2xl">
+                            <p className="text-xs italic text-green-400/60 mt-4 max-w-2xl">
                                 If you buy something from an ExpressDeal link, we may earn a commission. 
-                                <a href="#" className="underline ml-1 hover:text-white transition-colors">See our ethics statement.</a>
+                                <a href="#" className="underline ml-1 hover:text-green-300 transition-colors">See our ethics statement.</a>
                             </p>
                         </div>
                     </div>
                 </header>
                 
-                {/* ✅ HERO IMAGE (More compact height) */}
-                {blog.featured_image && (
-                    <div className="w-full bg-green-900 border-b-4 border-gray-100">
-                        <img 
-                            src={blog.featured_image} 
-                            alt={blog.title || 'Blog cover image'} 
-                            className="w-full max-h-[300px] md:max-h-[400px] object-cover object-center"
-                        />
-                    </div>
-                )}
-                
                 {/* 📝 MAIN CONTENT AREA */}
-                <div className="max-w-7xl mx-auto px-6 py-10 grid grid-cols-1 lg:grid-cols-[1fr_260px] gap-12">
+                <div className="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 lg:grid-cols-[1fr_260px] gap-12">
                     
                     {/* Content Left */}
                     <div>
-                        <div className="blog-content prose prose-lg max-w-none prose-img:w-auto prose-img:max-w-[350px] sm:prose-img:max-w-[400px] prose-img:mx-auto prose-img:rounded-lg">
+                        <div className="blog-content prose prose-lg max-w-none prose-img:w-auto prose-img:max-w-[350px] sm:prose-img:max-w-[400px] prose-img:mx-auto prose-img:rounded-xl prose-img:shadow-sm prose-headings:scroll-mt-24">
                             <BlogContent content={blog.content} />
                         </div>
 
                         <AffiliateLinks blog={blog} />
 
-                        <div className="mt-16 border-t pt-8 text-center">
-                            <h3 className="text-xl font-bold mb-4">
-                                Want more like this?
+                        <div className="mt-20 border-t border-gray-100 pt-10 text-center">
+                            <h3 className="text-2xl font-bold mb-6 text-gray-900">
+                                Enjoyed this article?
                             </h3>
 
                             <button
@@ -184,29 +180,30 @@ export default function BlogClient({ blog }) {
                                             : '/blog'
                                     )
                                 }
-                                className="inline-flex items-center gap-2 px-5 py-2.5 bg-green-700 text-white text-sm font-medium rounded-full hover:bg-green-800 transition-colors shadow-md shadow-green-900/10"
+                                className="inline-flex items-center gap-2 px-8 py-3.5 bg-green-700 text-white text-base font-semibold rounded-full hover:bg-green-800 hover:-translate-y-0.5 transition-all shadow-lg shadow-green-900/20"
                             >
                                 Explore more from {blog.categories?.name || 'Blogs'}
-                                <ArrowRightIcon size={16} />
+                                <ArrowRightIcon size={18} />
                             </button>
                         </div>
                     </div>
 
                     {/* Content Right: TOC */}
                     {toc.length > 0 && (
-                        <aside className="hidden lg:block sticky top-8 h-fit">
-                            <div className="border border-gray-100 rounded-xl p-5 bg-gray-50/50 shadow-sm">
-                                <p className="text-xs uppercase tracking-widest font-bold mb-3 text-green-800 border-b pb-2">
+                        <aside className="hidden lg:block sticky top-24 h-fit">
+                            <div className="border border-gray-100 rounded-2xl p-6 bg-gray-50/50 shadow-sm">
+                                <p className="text-xs uppercase tracking-widest font-bold mb-4 text-green-800 flex items-center gap-2">
+                                    <BookOpen size={14} className="text-green-600" />
                                     In this article
                                 </p>
 
-                                <ul className="space-y-2.5 text-sm">
+                                <ul className="space-y-3 text-sm">
                                     {toc.map((item) => (
                                         <li
                                             key={item.id}
-                                            className={item.level === 'H3' ? 'ml-3 text-gray-500 font-normal' : 'text-gray-800 font-medium'}
+                                            className={item.level === 'H3' ? 'ml-4 text-gray-500 font-normal' : 'text-gray-800 font-medium'}
                                         >
-                                            <a href={`#${item.id}`} className="hover:text-green-600 transition-colors block">
+                                            <a href={`#${item.id}`} className="hover:text-green-600 transition-colors block leading-snug">
                                                 {item.text}
                                             </a>
                                         </li>
@@ -217,8 +214,8 @@ export default function BlogClient({ blog }) {
                     )}
 
                     {loading && (
-                        <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/40 backdrop-blur-sm">
-                            <div className="w-10 h-10 border-4 border-white border-t-transparent rounded-full animate-spin mb-3"></div>
+                        <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-white/80 backdrop-blur-sm">
+                            <div className="w-12 h-12 border-4 border-green-600 border-t-transparent rounded-full animate-spin mb-4 shadow-lg"></div>
                         </div>
                     )}
                 </div>
