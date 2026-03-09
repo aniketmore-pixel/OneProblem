@@ -126,12 +126,21 @@ export default function BlogContent({ content }) {
               )
 
             case 'image':
-              return (
-                <figure key={i} className="my-8 flex flex-col items-center">
-                  <img src={block.url} alt={block.alt || 'Blog image'} className="w-full max-w-[600px] h-auto rounded-2xl shadow-sm" loading="lazy" />
-                  {block.alt && <figcaption className="text-center text-sm text-gray-500 mt-2">{block.alt}</figcaption>}
-                </figure>
-              )
+  return (
+    <figure key={i} className="my-8 flex flex-col items-center">
+      <img
+        src={block.url}
+        alt={block.alt || 'Blog image'}
+        className="w-auto max-w-[320px] h-auto rounded-xl shadow-sm"
+        loading="lazy"
+      />
+      {block.alt && (
+        <figcaption className="text-center text-sm text-gray-500 mt-2">
+          {block.alt}
+        </figcaption>
+      )}
+    </figure>
+  )
 
             default:
               return null
