@@ -6,7 +6,7 @@ import { calculateReadingTime } from '@/lib/utils/readingTime'
 import ShareButtons from '@/components/ShareButtons'
 import AffiliateLinks from '@/components/AffiliateLinks'
 import Link from 'next/link'
-import { ArrowRightIcon, Calendar, ArrowLeftIcon } from 'lucide-react'
+import { ArrowRightIcon, Calendar, ArrowLeftIcon, Plus } from 'lucide-react'
 import FavoriteButton from '@/components/FavoriteButton'
 
 export default function BlogClient({ blog }) {
@@ -19,7 +19,7 @@ export default function BlogClient({ blog }) {
         // optional UX delay for loader visibility
         setTimeout(() => {
             window.location.href = href
-        }, 100) // can be 100-300ms
+        }, 100)
     }
 
     /* 🔹 Reading progress bar */
@@ -37,7 +37,6 @@ export default function BlogClient({ blog }) {
 
     /* 🔹 Generate TOC after render */
     useEffect(() => {
-        // only generate TOC if blog content has blocks
         const headings = document.querySelectorAll('.blog-content h2, .blog-content h3')
 
         const items = Array.from(headings).map((heading) => {
@@ -56,11 +55,9 @@ export default function BlogClient({ blog }) {
         })
 
         setToc(items)
-    }, [blog.content]) // regenerate TOC when content changes
+    }, [blog.content])
 
     const publishedDate = blog.published_at || blog.created_at
-
-    // ✅ Calculate reading time for blocks or fallback to string
     const readingTime = calculateReadingTime(blog.content)
 
     return (
@@ -68,81 +65,115 @@ export default function BlogClient({ blog }) {
             {/* Progress bar */}
             <div className="fixed top-0 left-0 w-full h-[4px] bg-gray-200 z-50">
                 <div
-                    className="h-full bg-green-600"
+                    className="h-full bg-green-500"
                     style={{ width: `${readingProgress}%` }}
                 />
             </div>
 
-            <article className="bg-white pt-10">
+            <article className="bg-white min-h-screen">
                 
-                {/* ✅ FULL-WIDTH, NARROW EDGE-TO-EDGE BANNER */}
+                {/* 🎨 THE VERGE INSPIRED HEADER */}
+                <header className="bg-violet-900 text-white pt-24 pb-16 px-6">
+                    <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-[200px_1fr] lg:grid-cols-[250px_1fr] gap-10">
+                        
+                        {/* Left Column: Meta, Date, and Sharing */}
+                        <div className="flex flex-col border-b md:border-b-0 md:border-r border-violet-700/50 pb-8 md:pb-0 md:pr-8">
+                            <button
+                                onClick={() =>
+                                    handleNavigation(
+                                        blog.categories?.slug
+                                            ? `/category/${blog.categories.slug}`
+                                            : '/blog'
+                                    )
+                                }
+                                className="inline-flex items-center gap-2 text-sm text-violet-300 hover:text-white mb-10 transition-colors w-fit"
+                            >
+                                <ArrowLeftIcon size={16} />
+                                Back
+                            </button>
+
+                            <div className="mb-6">
+                                <p className="text-sm font-medium text-white mb-1">
+                                    by <span className="font-bold">{blog.author || 'Editorial Team'}</span>
+                                </p>
+                                <div className="text-xs text-violet-300 space-y-1">
+                                    <p>
+                                        {new Date(publishedDate).toLocaleDateString('en-US', {
+                                            month: 'short',
+                                            day: 'numeric',
+                                            year: 'numeric',
+                                        })}
+                                    </p>
+                                    <p>⏱ {readingTime}</p>
+                                </div>
+                            </div>
+
+                            <div className="flex flex-wrap items-center gap-4 mt-auto">
+                                {/* Wrap sharing and favorites in a container that inherits text-white if possible */}
+                                <div className="flex items-center gap-3 bg-white/10 p-2 rounded-xl backdrop-blur-sm">
+                                    <FavoriteButton blogId={blog.blog_id} />
+                                    <div className="w-px h-5 bg-violet-400/30"></div>
+                                    <ShareButtons />
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Right Column: Title and Summary */}
+                        <div className="flex flex-col justify-center">
+                            {/* Category Tags */}
+                            <div className="flex flex-wrap items-center gap-4 text-xs font-bold uppercase tracking-widest text-violet-300 mb-6">
+                                <span className="flex items-center gap-1">
+                                    <Plus size={14} className="text-green-400" />
+                                    {blog.categories?.name || 'Article'}
+                                </span>
+                                {blog.tags && (
+                                    <span className="flex items-center gap-1">
+                                        <Plus size={14} className="text-green-400" />
+                                        {blog.tags}
+                                    </span>
+                                )}
+                            </div>
+
+                            <h1 className="text-4xl sm:text-5xl lg:text-7xl font-extrabold mb-6 leading-[1.1] tracking-tight text-white">
+                                {blog.title}
+                            </h1>
+
+                            <p className="text-xl lg:text-3xl text-violet-100 mb-6 max-w-4xl leading-tight font-medium">
+                                {blog.summary}
+                            </p>
+
+                            <p className="text-sm italic text-violet-300 mt-2 max-w-2xl">
+                                If you buy something from an ExpressDeal link, we may earn a commission. 
+                                <a href="#" className="underline ml-1 hover:text-white transition-colors">See our ethics statement.</a>
+                            </p>
+                        </div>
+                    </div>
+                </header>
+                
+                {/* ✅ HERO IMAGE (Moved below the header, full width or contained) */}
                 {blog.featured_image && (
-                    <div className="w-full mb-8 relative">
+                    <div className="w-full bg-violet-900 border-b-8 border-green-500">
                         <img 
                             src={blog.featured_image} 
                             alt={blog.title || 'Blog cover image'} 
-                            // Narrow responsive height, object-cover to prevent stretching, no rounded corners
-                            className="w-full h-[150px] md:h-[200px] lg:h-[250px] object-cover rounded-none"
+                            className="w-full max-h-[500px] lg:max-h-[700px] object-cover object-center"
                         />
                     </div>
                 )}
                 
-                <div className="max-w-7xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-16">
-                    {/* CONTENT */}
+                {/* 📝 MAIN CONTENT AREA */}
+                <div className="max-w-7xl mx-auto px-6 py-16 grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-16">
+                    
+                    {/* Content Left */}
                     <div>
-                        {/* Back to category */}
-                        <button
-                            onClick={() =>
-                                handleNavigation(
-                                    blog.categories?.slug
-                                        ? `/category/${blog.categories.slug}`
-                                        : '/blog'
-                                )
-                            }
-                            className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-gray-800 mb-6 transition-colors"
-                        >
-                            <ArrowLeftIcon size={16} />
-                            Back to {blog.categories?.name || 'Blogs'}
-                        </button>
-
-                        <p className="text-xs uppercase tracking-widest text-green-600 font-semibold mb-4">
-                            {blog.categories?.name}
-                        </p>
-
-                        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold mb-6 leading-tight">
-                            {blog.title}
-                        </h1>
-
-                        <div className="flex items-center gap-6 text-sm text-gray-500 mb-10">
-                            <span className="flex items-center gap-1">
-                                <Calendar size={14} />
-                                {new Date(publishedDate).toLocaleDateString('en-US', {
-                                    year: 'numeric',
-                                    month: 'long',
-                                    day: 'numeric',
-                                })}
-                            </span>
-
-                            <span>⏱ {readingTime}</span>
-
-                            <FavoriteButton blogId={blog.blog_id} />
-
-                            <ShareButtons />
+                        <div className="blog-content prose prose-lg lg:prose-xl max-w-none prose-img:w-auto prose-img:max-w-[350px] sm:prose-img:max-w-[400px] prose-img:mx-auto prose-img:rounded-lg">
+                            <BlogContent content={blog.content} />
                         </div>
-
-                        <p className="text-xl text-gray-700 mb-16 max-w-3xl leading-relaxed">
-                            {blog.summary}
-                        </p>
-
-                        {/* Blog content */}
-<div className="blog-content prose prose-lg lg:prose-xl max-w-none prose-img:w-auto prose-img:max-w-[350px] sm:prose-img:max-w-[400px] prose-img:mx-auto prose-img:rounded-lg">
-    <BlogContent content={blog.content} />
-</div>
 
                         <AffiliateLinks blog={blog} />
 
-                        <div className="mt-24 text-center">
-                            <h3 className="text-xl font-semibold mb-3">
+                        <div className="mt-24 border-t pt-10 text-center">
+                            <h3 className="text-2xl font-bold mb-4">
                                 Want more like this?
                             </h3>
 
@@ -154,20 +185,19 @@ export default function BlogClient({ blog }) {
                                             : '/blog'
                                     )
                                 }
-                                className="inline-flex items-center gap-2 text-green-600 font-medium hover:underline"
+                                className="inline-flex items-center gap-2 px-6 py-3 bg-violet-900 text-white font-medium rounded-full hover:bg-violet-800 transition-colors shadow-lg shadow-violet-900/20"
                             >
                                 Explore more from {blog.categories?.name || 'Blogs'}
-                                <ArrowRightIcon size={16} />
+                                <ArrowRightIcon size={18} />
                             </button>
-
                         </div>
                     </div>
 
-                    {/* TOC */}
+                    {/* Content Right: TOC */}
                     {toc.length > 0 && (
-                        <aside className="hidden lg:block sticky top-32 h-fit">
-                            <div className="border rounded-xl p-5 bg-gray-50/50">
-                                <p className="text-sm font-semibold mb-4 text-gray-900">
+                        <aside className="hidden lg:block sticky top-10 h-fit">
+                            <div className="border border-gray-100 rounded-xl p-6 bg-white shadow-sm">
+                                <p className="text-xs uppercase tracking-widest font-bold mb-4 text-violet-900 border-b pb-3">
                                     In this article
                                 </p>
 
@@ -175,9 +205,9 @@ export default function BlogClient({ blog }) {
                                     {toc.map((item) => (
                                         <li
                                             key={item.id}
-                                            className={item.level === 'H3' ? 'ml-4 text-gray-500' : 'text-gray-700'}
+                                            className={item.level === 'H3' ? 'ml-4 text-gray-500 font-normal' : 'text-gray-900 font-medium'}
                                         >
-                                            <a href={`#${item.id}`} className="hover:text-green-600 transition-colors">
+                                            <a href={`#${item.id}`} className="hover:text-violet-600 transition-colors block">
                                                 {item.text}
                                             </a>
                                         </li>
@@ -189,10 +219,7 @@ export default function BlogClient({ blog }) {
 
                     {loading && (
                         <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/40 backdrop-blur-sm">
-                            <div className="w-12 h-12 border-4 border-green-600 border-t-transparent rounded-full animate-spin mb-4"></div>
-                            <p className="text-white text-lg font-medium">
-                                Loading...
-                            </p>
+                            <div className="w-12 h-12 border-4 border-white border-t-transparent rounded-full animate-spin mb-4"></div>
                         </div>
                     )}
                 </div>
