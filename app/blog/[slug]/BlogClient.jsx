@@ -74,13 +74,19 @@ export default function BlogClient({ blog }) {
             </div>
 
             <article className="bg-white pt-10">
-                {/* Hero image */}
-                {/* Hero image - Cinematic Wrapper */}
-                {/* Hero image - Premium Studio Frame */}
-                {/* Hero image - Standard Clean Banner */}
-                {/* Hero image - Full-Width Edge-to-Edge Banner */}
                 
-                <div className="max-w-7xl mx-auto px-6 py-16 grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-16">
+                {/* ✅ ACTUALLY RENDERING THE HERO IMAGE NOW */}
+                {blog.featured_image && (
+                    <div className="max-w-7xl mx-auto px-6 mb-8">
+                        <img 
+                            src={blog.featured_image} 
+                            alt={blog.title || 'Blog cover image'} 
+                            className="w-full h-auto max-h-[500px] object-cover rounded-3xl shadow-lg"
+                        />
+                    </div>
+                )}
+                
+                <div className="max-w-7xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-16">
                     {/* CONTENT */}
                     <div>
                         {/* Back to category */}
@@ -92,18 +98,17 @@ export default function BlogClient({ blog }) {
                                         : '/blog'
                                 )
                             }
-                            className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-gray-800 mb-6"
+                            className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-gray-800 mb-6 transition-colors"
                         >
                             <ArrowLeftIcon size={16} />
                             Back to {blog.categories?.name || 'Blogs'}
                         </button>
 
-
                         <p className="text-xs uppercase tracking-widest text-green-600 font-semibold mb-4">
                             {blog.categories?.name}
                         </p>
 
-                        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold mb-6">
+                        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold mb-6 leading-tight">
                             {blog.title}
                         </h1>
 
@@ -124,7 +129,7 @@ export default function BlogClient({ blog }) {
                             <ShareButtons />
                         </div>
 
-                        <p className="text-xl text-gray-700 mb-16 max-w-3xl">
+                        <p className="text-xl text-gray-700 mb-16 max-w-3xl leading-relaxed">
                             {blog.summary}
                         </p>
 
@@ -160,8 +165,8 @@ export default function BlogClient({ blog }) {
                     {/* TOC */}
                     {toc.length > 0 && (
                         <aside className="hidden lg:block sticky top-32 h-fit">
-                            <div className="border rounded-xl p-5">
-                                <p className="text-sm font-semibold mb-4">
+                            <div className="border rounded-xl p-5 bg-gray-50/50">
+                                <p className="text-sm font-semibold mb-4 text-gray-900">
                                     In this article
                                 </p>
 
@@ -169,9 +174,9 @@ export default function BlogClient({ blog }) {
                                     {toc.map((item) => (
                                         <li
                                             key={item.id}
-                                            className={item.level === 'H3' ? 'ml-4 text-gray-500' : ''}
+                                            className={item.level === 'H3' ? 'ml-4 text-gray-500' : 'text-gray-700'}
                                         >
-                                            <a href={`#${item.id}`} className="hover:text-green-600">
+                                            <a href={`#${item.id}`} className="hover:text-green-600 transition-colors">
                                                 {item.text}
                                             </a>
                                         </li>
@@ -182,7 +187,7 @@ export default function BlogClient({ blog }) {
                     )}
 
                     {loading && (
-                        <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/40">
+                        <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/40 backdrop-blur-sm">
                             <div className="w-12 h-12 border-4 border-green-600 border-t-transparent rounded-full animate-spin mb-4"></div>
                             <p className="text-white text-lg font-medium">
                                 Loading...
