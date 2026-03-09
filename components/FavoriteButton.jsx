@@ -100,7 +100,7 @@ export default function FavoriteButton({ blogId }) {
         <>
             <button
                 onClick={toggleBookmark}
-                className="flex flex-col items-center justify-center gap-1.5 px-8 py-3 rounded-[2rem] border border-white text-white hover:bg-white/10 transition-colors group"
+                className="px-5 py-2.5 border rounded-full text-sm font-medium hover:bg-white/10 transition-colors group flex items-center gap-2"
             >
                 <Star
                     size={24}

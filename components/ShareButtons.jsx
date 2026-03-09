@@ -35,7 +35,7 @@ export default function ShareButtons() {
         {/* SHARE BUTTON */}
         <button
           onClick={() => setOpen(!open)}
-          className="px-5 py-2.5 border rounded-full text-sm font-medium hover:bg-gray-100 flex items-center gap-2"
+          className="px-5 py-2.5 border rounded-full text-sm font-medium hover:bg-white/10 transition-colors group flex items-center gap-2"
         >
           🔗 Share
         </button>
