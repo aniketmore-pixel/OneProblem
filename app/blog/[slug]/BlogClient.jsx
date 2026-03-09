@@ -75,13 +75,14 @@ export default function BlogClient({ blog }) {
 
             <article className="bg-white pt-10">
                 
-                {/* ✅ ACTUALLY RENDERING THE HERO IMAGE NOW */}
+                {/* ✅ FULL-WIDTH, NARROW EDGE-TO-EDGE BANNER */}
                 {blog.featured_image && (
-                    <div className="max-w-7xl mx-auto px-6 mb-8">
+                    <div className="w-full mb-8 relative">
                         <img 
                             src={blog.featured_image} 
                             alt={blog.title || 'Blog cover image'} 
-                            className="w-full h-auto max-h-[500px] object-cover rounded-3xl shadow-lg"
+                            // Narrow responsive height, object-cover to prevent stretching, no rounded corners
+                            className="w-full h-[150px] md:h-[200px] lg:h-[250px] object-cover rounded-none"
                         />
                     </div>
                 )}
