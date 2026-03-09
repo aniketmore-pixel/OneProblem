@@ -78,16 +78,14 @@ export default function BlogClient({ blog }) {
                 {/* Hero image - Cinematic Wrapper */}
                 {/* Hero image - Premium Studio Frame */}
                 {/* Hero image - Standard Clean Banner */}
+                {/* Hero image - Full-Width Edge-to-Edge Banner */}
                 {blog.featured_image && (
-                    <div className="max-w-6xl mx-auto px-4 mt-8 md:mt-12">
-                        {/* Constrain height strictly so it doesn't take up the whole screen */}
-                        <div className="w-full h-64 sm:h-80 md:h-96 rounded-[2rem] overflow-hidden border border-slate-100 shadow-xl shadow-slate-200/40 bg-slate-50">
-                            <img
-                                src={blog.featured_image}
-                                alt={blog.title}
-                                className="w-full h-full object-cover"
-                            />
-                        </div>
+                    <div className="w-full h-56 sm:h-64 md:h-80 mt-8 md:mt-12 bg-slate-50 border-y border-slate-100">
+                        <img
+                            src={blog.featured_image}
+                            alt={blog.title}
+                            className="w-full h-full object-cover object-center"
+                        />
                     </div>
                 )}
                 <div className="max-w-7xl mx-auto px-6 py-16 grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-16">
