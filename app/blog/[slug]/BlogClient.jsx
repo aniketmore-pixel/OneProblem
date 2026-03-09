@@ -16,7 +16,6 @@ export default function BlogClient({ blog }) {
 
     const handleNavigation = (href) => {
         setLoading(true)
-        // optional UX delay for loader visibility
         setTimeout(() => {
             window.location.href = href
         }, 100)
@@ -72,15 +71,15 @@ export default function BlogClient({ blog }) {
 
             <article className="bg-white min-h-screen">
                 
-                {/* 🎨 EXPANDED TEXT-ONLY HEADER */}
-                <header className="relative bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-green-800 via-green-900 to-black text-white pt-20 pb-16 px-6 overflow-hidden">
+                {/* 🎨 EXPANDED LIGHT-MODE HEADER */}
+                <header className="relative pt-20 pb-16 px-6 overflow-hidden">
                     {/* Optional subtle decorative element in background */}
-                    <div className="absolute -top-24 -right-24 w-96 h-96 bg-green-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                    <div className="absolute -top-24 -right-24 w-96 h-96 bg-green-200/40 rounded-full blur-3xl pointer-events-none"></div>
 
                     <div className="relative max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-[200px_1fr] lg:grid-cols-[240px_1fr] gap-10">
                         
                         {/* Left Column: Meta, Date, and Sharing */}
-                        <div className="flex flex-col border-b md:border-b-0 md:border-r border-green-700/50 pb-8 md:pb-0 md:pr-8">
+                        <div className="flex flex-col border-b md:border-b-0 md:border-r border-green-200/60 pb-8 md:pb-0 md:pr-8">
                             <button
                                 onClick={() =>
                                     handleNavigation(
@@ -89,18 +88,18 @@ export default function BlogClient({ blog }) {
                                             : '/blog'
                                     )
                                 }
-                                className="inline-flex items-center gap-1.5 text-sm font-medium text-green-300 hover:text-white mb-8 transition-colors w-fit group"
+                                className="inline-flex items-center gap-1.5 text-sm font-medium text-green-600 hover:text-green-800 mb-8 transition-colors w-fit group"
                             >
                                 <ArrowLeftIcon size={16} className="group-hover:-translate-x-1 transition-transform" />
                                 Back to {blog.categories?.name || 'Blog'}
                             </button>
 
                             <div className="mb-6">
-                                <p className="text-sm font-medium text-white mb-1.5 flex items-center gap-2">
+                                <p className="text-sm font-medium text-gray-600 mb-1.5 flex items-center gap-2">
                                     <span className="w-6 h-px bg-green-500 inline-block"></span>
-                                    by <span className="font-bold">{blog.author || 'Editorial Team'}</span>
+                                    by <span className="font-bold text-gray-900">{blog.author || 'Editorial Team'}</span>
                                 </p>
-                                <div className="text-sm text-green-300/80 space-y-1.5 pl-8">
+                                <div className="text-sm text-gray-500 space-y-1.5 pl-8">
                                     <p className="flex items-center gap-2">
                                         <Calendar size={14} />
                                         {new Date(publishedDate).toLocaleDateString('en-US', {
@@ -117,10 +116,10 @@ export default function BlogClient({ blog }) {
                             </div>
 
                             <div className="flex flex-wrap items-center gap-4 mt-auto">
-                                {/* Adjusted Favorite/Share container for better contrast */}
-                                <div className="flex items-center gap-3 bg-black/30 text-white p-2 rounded-xl border border-green-800/50 backdrop-blur-sm shadow-inner">
+                                {/* Light-mode optimized Favorite/Share container */}
+                                <div className="flex items-center gap-3 bg-white text-gray-700 p-2 rounded-xl border border-gray-200 shadow-sm">
                                     <FavoriteButton blogId={blog.blog_id} />
-                                    <div className="w-px h-5 bg-green-700/50"></div>
+                                    <div className="w-px h-5 bg-gray-200"></div>
                                     <ShareButtons />
                                 </div>
                             </div>
@@ -129,28 +128,28 @@ export default function BlogClient({ blog }) {
                         {/* Right Column: Title and Summary */}
                         <div className="flex flex-col justify-center">
                             {/* Category Tags */}
-                            <div className="flex flex-wrap items-center gap-3 text-xs font-bold uppercase tracking-widest text-green-400 mb-5">
-                                <span className="flex items-center gap-1 bg-green-900/50 px-2 py-1 rounded-md border border-green-800/50">
+                            <div className="flex flex-wrap items-center gap-3 text-xs font-bold uppercase tracking-widest text-green-700 mb-5">
+                                <span className="flex items-center gap-1 bg-green-100/80 px-2 py-1 rounded-md border border-green-200">
                                     {blog.categories?.name || 'Article'}
                                 </span>
                                 {blog.tags && (
-                                    <span className="flex items-center gap-1 bg-green-900/50 px-2 py-1 rounded-md border border-green-800/50">
+                                    <span className="flex items-center gap-1 bg-green-100/80 px-2 py-1 rounded-md border border-green-200">
                                         {blog.tags}
                                     </span>
                                 )}
                             </div>
 
-                            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold mb-6 leading-[1.15] tracking-tight text-white max-w-5xl">
+                            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold mb-6 leading-[1.15] tracking-tight text-gray-900 max-w-5xl">
                                 {blog.title}
                             </h1>
 
-                            <p className="text-xl lg:text-2xl text-green-100/90 mb-6 max-w-4xl leading-relaxed font-light">
+                            <p className="text-xl lg:text-2xl text-gray-700 mb-6 max-w-4xl leading-relaxed font-light">
                                 {blog.summary}
                             </p>
 
-                            <p className="text-xs italic text-green-400/60 mt-4 max-w-2xl">
+                            <p className="text-xs italic text-gray-400 mt-4 max-w-2xl">
                                 If you buy something from an ExpressDeal link, we may earn a commission. 
-                                <a href="#" className="underline ml-1 hover:text-green-300 transition-colors">See our ethics statement.</a>
+                                <a href="#" className="underline ml-1 hover:text-gray-600 transition-colors">See our ethics statement.</a>
                             </p>
                         </div>
                     </div>
@@ -161,7 +160,7 @@ export default function BlogClient({ blog }) {
                     
                     {/* Content Left */}
                     <div>
-                        <div className="blog-content prose prose-lg max-w-none prose-img:w-auto prose-img:max-w-[350px] sm:prose-img:max-w-[400px] prose-img:mx-auto prose-img:rounded-xl prose-img:shadow-sm prose-headings:scroll-mt-24">
+                        <div className="blog-content prose prose-lg max-w-none prose-img:w-auto prose-img:max-w-[350px] sm:prose-img:max-w-[400px] prose-img:mx-auto prose-img:rounded-xl prose-img:shadow-sm prose-headings:scroll-mt-24 text-gray-800">
                             <BlogContent content={blog.content} />
                         </div>
 
@@ -180,7 +179,7 @@ export default function BlogClient({ blog }) {
                                             : '/blog'
                                     )
                                 }
-                                className="inline-flex items-center gap-2 px-8 py-3.5 bg-green-700 text-white text-base font-semibold rounded-full hover:bg-green-800 hover:-translate-y-0.5 transition-all shadow-lg shadow-green-900/20"
+                                className="inline-flex items-center gap-2 px-8 py-3.5 bg-green-600 text-white text-base font-semibold rounded-full hover:bg-green-700 hover:-translate-y-0.5 transition-all shadow-lg shadow-green-900/10"
                             >
                                 Explore more from {blog.categories?.name || 'Blogs'}
                                 <ArrowRightIcon size={18} />
@@ -192,7 +191,7 @@ export default function BlogClient({ blog }) {
                     {toc.length > 0 && (
                         <aside className="hidden lg:block sticky top-24 h-fit">
                             <div className="border border-gray-100 rounded-2xl p-6 bg-gray-50/50 shadow-sm">
-                                <p className="text-xs uppercase tracking-widest font-bold mb-4 text-green-800 flex items-center gap-2">
+                                <p className="text-xs uppercase tracking-widest font-bold mb-4 text-green-700 flex items-center gap-2">
                                     <BookOpen size={14} className="text-green-600" />
                                     In this article
                                 </p>
