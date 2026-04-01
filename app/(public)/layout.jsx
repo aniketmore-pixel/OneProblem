@@ -7,7 +7,7 @@ export default function PublicLayout({ children }) {
 
     return (
         <>
-            <Navbar />
+            {/* <Navbar /> */}
             {children}
             
         </>

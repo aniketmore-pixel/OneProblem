@@ -10,13 +10,13 @@ const outfit = Outfit({
 })
 
 export const metadata = {
-  title: 'ExpressDeal - shop smarter',
-  description: 'Welcome to ExpressDeal, where finding good deals is simple...',
+  title: 'OneProblem',
+  description: 'One coding problem every day. Consistency is the key to mastery.',
   openGraph: {
-    title: 'ExpressDeal - shop smarter',
-    description: 'Welcome to ExpressDeal, where finding good deals is simple...',
+    title: 'OneProblem',
+    description: 'One coding problem every day. Consistency is the key to mastery.',
     url: 'https://expressdeal.vercel.app',
-    siteName: 'ExpressDeal', 
+    siteName: 'OneProblem', 
     locale: 'en_US',
     type: 'website',
   },
@@ -107,7 +107,7 @@ export default function RootLayout({ children }) {
 
         <Providers>
           {children}
-          <Footer />
+          {/* <Footer /> */}
         </Providers>
       </body>
     </html>

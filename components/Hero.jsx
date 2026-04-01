@@ -1,429 +1,304 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
-import Link from 'next/link'
-import Image from "next/image"
+import React, { useState, useEffect } from 'react'
+import { Code2, ExternalLink, Youtube, BookOpen, ChevronRight, Play, Pause, RotateCcw, Timer, Coffee, BrainCircuit } from 'lucide-react'
 
-import { SupabaseClient } from '@supabase/supabase-js'
-import { supabase } from '@/lib/supabaseClient'
-import { getTrendingBlogs } from '@/lib/queries/blogs'
+const SolveOne = () => {
+  // --- Language State ---
+  const [lang, setLang] = useState('en') // 'en' or 'mr'
 
-import { 
-  ArrowRightIcon, 
-  ChevronRightIcon, 
-  ShoppingCart, 
-  BookOpen, 
-  CreditCard,
-  CheckCircle2,
-  X,
-  Smartphone,
-  Laptop,
-  Shirt,
-  Sofa,
-  Monitor,
-  Headphones,
-  Camera,
-  Gamepad2,
-  Sparkles
-} from 'lucide-react'
+  // --- Pomodoro State ---
+  const [timeLeft, setTimeLeft] = useState(25 * 60) // 25 minutes in seconds
+  const [isActive, setIsActive] = useState(false)
+  const [isWorkMode, setIsWorkMode] = useState(true) // true for work, false for break
 
-import heroImage from "@/assets/hero-image.png"
-
-// --- Helper Data for Flipkart-style Category Strip ---
-const CATEGORIES = [
-  { name: 'For You', icon: Sparkles, active: true },
-  { name: 'Fashion', icon: Shirt },
-  { name: 'Mobiles', icon: Smartphone },
-  { name: 'Electronics', icon: Laptop },
-  { name: 'Home', icon: Sofa },
-  { name: 'Appliances', icon: Monitor },
-  { name: 'Audio', icon: Headphones },
-  { name: 'Cameras', icon: Camera },
-  { name: 'Gaming', icon: Gamepad2 },
-]
-
-const Hero = () => {
-  const [collections, setCollections] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [announcements, setAnnouncements] = useState([])
-  const [loadingBlogId, setLoadingBlogId] = useState(null)
-
-  const [showModal, setShowModal] = useState(false)
-  const [isSignup, setIsSignup] = useState(false)
-
-  const [trendingBlogs, setTrendingBlogs] = useState([])
-
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
-  const [user, setUser] = useState(null)
-
-  const router = useRouter()
-
-  const handleNavigation = async (url) => {
-    setLoading(true)
-    await new Promise(r => setTimeout(r, 200)) 
-    router.push(url)
-  }
-
-  const handleBlogNavigation = (slug, blogId) => {
-    setLoadingBlogId(blogId)
-    setTimeout(() => {
-      router.push(`/blog/${slug}`)
-    }, 150) 
-  }
-
+  // --- Pomodoro Logic ---
   useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem('user'))
-    if (storedUser) setUser(storedUser)
-  }, [])
+    let interval = null
 
-  useEffect(() => {
-    const fetchAnnouncements = async () => {
-      try {
-        const { data, error } = await supabase
-          .from('announcements')
-          .select('*')
-          .order('release_date', { ascending: true })
-          .limit(6)
-
-        if (error) throw error
-        setAnnouncements(data || [])
-      } catch (err) {
-        console.error('Error fetching announcements:', err)
-      }
-    }
-    fetchAnnouncements()
-  }, [])
-
-  useEffect(() => {
-    const fetchTrendingBlogs = async () => {
-      const blogs = await getTrendingBlogs()
-      setTrendingBlogs(blogs)
-    }
-    fetchTrendingBlogs()
-  }, [])
-
-  useEffect(() => {
-    const fetchCollections = async () => {
-      try {
-        const res = await fetch('/api/store/collections')
-        const data = await res.json()
-        setCollections(Array.isArray(data.collections) ? data.collections : [])
-      } catch (err) {
-        console.error(err)
-      } finally {
-        setLoading(false)
-      }
-    }
-    fetchCollections()
-  }, [])
-
-  const handleLogin = async () => {
-    setError('')
-    const res = await fetch('/api/auth/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, password }),
-    })
-    const data = await res.json()
-
-    if (!res.ok) {
-      setError(data.error || 'Invalid credentials')
-      return
+    if (isActive && timeLeft > 0) {
+      interval = setInterval(() => {
+        setTimeLeft((time) => time - 1)
+      }, 1000)
+    } else if (timeLeft === 0) {
+      // Auto-switch modes when time runs out
+      setIsActive(false)
+      const nextModeIsWork = !isWorkMode
+      setIsWorkMode(nextModeIsWork)
+      setTimeLeft(nextModeIsWork ? 25 * 60 : 5 * 60)
     }
 
-    localStorage.setItem('user', JSON.stringify(data))
-    setUser(data)
-    setShowModal(false)
-    setUsername('')
-    setPassword('')
+    return () => clearInterval(interval)
+  }, [isActive, timeLeft, isWorkMode])
+
+  const toggleTimer = () => setIsActive(!isActive)
+  
+  const resetTimer = () => {
+    setIsActive(false)
+    setTimeLeft(isWorkMode ? 25 * 60 : 5 * 60)
   }
 
-  const handleSignup = async () => {
-    setError('')
-    const res = await fetch('/api/auth/signup', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, password }),
-    })
-    const data = await res.json()
+  const switchMode = (mode) => {
+    setIsActive(false)
+    setIsWorkMode(mode === 'work')
+    setTimeLeft(mode === 'work' ? 25 * 60 : 5 * 60)
+  }
 
-    if (!res.ok) {
-      setError(data.error || 'Signup failed')
-      return
+  const formatTime = (seconds) => {
+    const mins = Math.floor(seconds / 60)
+    const secs = seconds % 60
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`
+  }
+
+  // --- Translations Dictionary ---
+  const t = {
+    en: {
+      brand: "OneProblem",
+      tagline: "One coding problem every day. Consistency is the key to mastery.",
+      problemTitle: "Today's Challenge: Two Sum",
+      difficulty: "Easy",
+      problemDesc: "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target. You may assume that each input would have exactly one solution.",
+      solveExternally: "Solve on LeetCode",
+      resourcesTitle: "Learning Resources",
+      videoLink: "Watch Video Explanation",
+      articleLink: "Read Solution Article",
+      pomoTitle: "Getting distracted?",
+      pomoDesc: "Use the Pomodoro timer to stay focused and crush this problem.",
+      pomoFocus: "Focus",
+      pomoBreak: "Break",
+      pomoStart: "Start",
+      pomoPause: "Pause"
+    },
+    mr: {
+      brand: "SolveOne",
+      tagline: "दररोज एक कोडिंग समस्या. सातत्य ही यशाची गुरुकिल्ली आहे.",
+      problemTitle: "आजचे आव्हान: Two Sum",
+      difficulty: "सोपे",
+      problemDesc: "nums नावाचा पूर्णांकांचा ॲरे (array) आणि एक टार्गेट (target) दिले असता, ज्या दोन संख्यांची बेरीज टार्गेट एवढी होते, त्यांचे इंडायसेस (indices) परत करा. प्रत्येक इनपुटला फक्त एकच उत्तर असेल असे गृहीत धरा.",
+      solveExternally: "LeetCode वर सोडवा",
+      resourcesTitle: "शिक्षणासाठी साधने",
+      videoLink: "व्हिडिओ स्पष्टीकरण पहा",
+      articleLink: "उत्तरे आणि लेख वाचा",
+      pomoTitle: "लक्ष विचलित होत आहे?",
+      pomoDesc: "लक्ष केंद्रित करण्यासाठी पोमोडोरो टायमर वापरा.",
+      pomoFocus: "काम",
+      pomoBreak: "विश्रांती",
+      pomoStart: "सुरू करा",
+      pomoPause: "थांबवा"
     }
-
-    await handleLogin()
-    setIsSignup(false)
   }
 
-  const handleLogout = () => {
-    localStorage.removeItem('user')
-    setUser(null)
-  }
+  // Dummy URLs for the daily problem
+  const problemUrl = "https://leetcode.com/problems/two-sum/"
+  const videoUrl = "https://www.youtube.com/watch?v=KLlXCFG5TnA" 
+  const articleUrl = "https://leetcode.com/articles/two-sum/"
 
   return (
-    <main className="w-full min-h-screen bg-[#f1f2f4] text-slate-900 selection:bg-green-200 pb-10">
-      
-      {/* 1. FLIPKART STYLE CATEGORY STRIP */}
-      <div className="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
-        <div className="max-w-[1400px] mx-auto px-4 py-3">
-          <div className="flex justify-between items-center overflow-x-auto hide-scrollbar gap-8 md:gap-4 px-2">
-            {CATEGORIES.map((cat, idx) => (
-              <div 
-                key={idx} 
-                className={`flex flex-col items-center gap-1.5 min-w-max cursor-pointer group pb-1 border-b-2 transition-colors ${cat.active ? 'border-green-600' : 'border-transparent hover:border-green-300'}`}
-              >
-                <div className={`p-2 rounded-full transition-colors ${cat.active ? 'bg-green-100 text-green-700' : 'bg-slate-50 text-slate-600 group-hover:bg-green-50'}`}>
-                  <cat.icon size={22} strokeWidth={1.5} />
-                </div>
-                <span className={`text-sm font-semibold ${cat.active ? 'text-green-700' : 'text-slate-700'}`}>
-                  {cat.name}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
+    <>
+      <style dangerouslySetInnerHTML={{__html: `
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        .font-sans { font-family: 'Inter', sans-serif; }
+      `}} />
 
-      <div className="max-w-[1400px] mx-auto px-2 sm:px-4 mt-4 space-y-4">
+      <div className="min-h-screen bg-[#F8F9FA] text-[#0A0A0A] font-sans selection:bg-black selection:text-white relative overflow-hidden flex flex-col items-center">
         
-        {/* 2. PROMOTIONAL BANNERS GRID */}
-        <section className="grid grid-cols-1 lg:grid-cols-12 gap-4">
+        <div className="absolute top-0 left-0 right-0 h-[50vh] bg-gradient-to-b from-blue-100/40 to-transparent -z-10 pointer-events-none" />
+
+        {/* --- Language Toggle Slider --- */}
+        <div className="absolute top-6 left-6 flex items-center bg-white/50 backdrop-blur-md p-1.5 rounded-full border border-gray-200/50 z-20 shadow-sm">
+          <button
+            onClick={() => setLang('en')}
+            className={`px-4 py-1.5 text-xs font-bold rounded-full transition-all duration-300 ${
+              lang === 'en' ? 'bg-black text-white shadow-md' : 'text-gray-500 hover:text-black'
+            }`}
+          >
+            EN
+          </button>
+          <button
+            onClick={() => setLang('mr')}
+            className={`px-4 py-1.5 text-xs font-bold rounded-full transition-all duration-300 ${
+              lang === 'mr' ? 'bg-black text-white shadow-md' : 'text-gray-500 hover:text-black'
+            }`}
+          >
+            मराठी
+          </button>
+        </div>
+
+        <main className="w-full max-w-3xl mx-auto px-6 pt-24 pb-20 flex flex-col items-center z-10">
           
-          {/* Main Hero Banner (Takes up 8 columns) */}
-          <div className="lg:col-span-8 bg-gradient-to-r from-emerald-50 to-green-100 rounded-xl overflow-hidden relative border border-green-200/60 shadow-sm flex flex-col md:flex-row items-center p-6 md:p-10 min-h-[340px]">
-            {/* Background decors */}
-            <div className="absolute top-0 right-0 w-64 h-64 bg-green-300/20 blur-3xl rounded-full"></div>
-            
-            <div className="flex-1 z-10 space-y-4 mb-6 md:mb-0">
-              <span className="bg-green-600 text-white px-2 py-1 rounded text-xs font-bold uppercase tracking-wider">
-                ExpressDeal Unique
-              </span>
-              <h1 className="text-3xl md:text-5xl font-extrabold text-slate-900 leading-tight">
-                Curated Picks <br/>
-                <span className="text-green-700">From ₹999</span>
-              </h1>
-              <p className="text-slate-600 text-sm md:text-base max-w-sm">
-                We analyze the best deals across multiple platforms to help you confidently choose anything you can buy online.
-              </p>
-              <div className="pt-2">
-                <Link
-                  href="/categories"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleNavigation('/categories');
-                  }}
-                  className="inline-flex items-center gap-2 bg-slate-900 text-white px-6 py-2.5 rounded shadow-md hover:bg-slate-800 transition-colors font-medium text-sm"
-                >
-                  Explore Deals <ArrowRightIcon size={16} />
-                </Link>
+          {/* Header Section */}
+          <div className="text-center mb-10 w-full animate-in slide-in-from-top-4 duration-700">
+            <div className="flex justify-center mb-4">
+              <div className="bg-black text-white p-3 rounded-2xl shadow-lg">
+                <Code2 size={40} />
               </div>
             </div>
-
-            <div className="flex-1 relative z-10 w-full flex justify-center md:justify-end">
-              <Image
-                src={heroImage}
-                alt="Showcase products"
-                width={400}
-                height={400}
-                priority
-                className="w-4/5 md:w-full max-w-[300px] object-contain drop-shadow-2xl"
-              />
-            </div>
-          </div>
-
-          {/* Secondary Banners (Takes up 4 columns) */}
-          <div className="lg:col-span-4 flex flex-col gap-4">
-            
-            <div className="flex-1 bg-white rounded-xl p-6 border border-slate-200 shadow-sm flex flex-col justify-center relative overflow-hidden group cursor-pointer hover:shadow-md transition-shadow">
-              <div className="relative z-10">
-                <h3 className="text-slate-500 font-bold text-sm tracking-widest uppercase mb-1">Samsung</h3>
-                <h2 className="text-2xl font-extrabold text-slate-900 mb-2">Galaxy S25 FE</h2>
-                <p className="text-green-600 font-bold text-xl mb-4">Just ₹54,999</p>
-                <span className="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded border border-slate-200">Read our review</span>
-              </div>
-              <div className="absolute right-[-20px] bottom-[-20px] w-32 h-32 bg-slate-100 rounded-full group-hover:scale-110 transition-transform"></div>
-              {/* Note: Placeholder for actual secondary image */}
-              <Smartphone className="absolute right-4 bottom-4 w-20 h-20 text-slate-300 transform rotate-12" />
-            </div>
-
-            <div className="flex-1 bg-slate-900 rounded-xl p-6 border border-slate-800 shadow-sm flex flex-col justify-center relative overflow-hidden group cursor-pointer hover:shadow-md transition-shadow">
-              <div className="relative z-10">
-                <h3 className="text-slate-400 font-bold text-sm tracking-widest uppercase mb-1">Accessories</h3>
-                <h2 className="text-2xl font-extrabold text-white mb-2">Premium Audio</h2>
-                <p className="text-emerald-400 font-bold text-xl mb-4">Top 10 Picks</p>
-                <span className="text-xs bg-slate-800 text-slate-300 px-2 py-1 rounded border border-slate-700">Buying Guide</span>
-              </div>
-              <Headphones className="absolute right-4 bottom-4 w-24 h-24 text-slate-700 opacity-50 transform -rotate-12 group-hover:scale-110 transition-transform" />
-            </div>
-
-          </div>
-        </section>
-
-        {/* 3. SUGGESTED FOR YOU (TRENDING REVIEWS) */}
-        <section className="bg-white rounded-xl shadow-sm border border-slate-200 p-4 sm:p-6 mt-4">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-xl md:text-2xl font-bold text-slate-900">Suggested For You</h2>
-            <Link href="/blog" className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white hover:bg-blue-700 transition-colors shadow-sm">
-              <ArrowRightIcon size={18} />
-            </Link>
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-            {trendingBlogs.map(blog => (
-              <Link
-                key={blog.blog_id}
-                href={`/blog/${blog.slug}`}
-                onClick={(e) => {
-                  e.preventDefault();
-                  if(loadingBlogId !== blog.blog_id) {
-                    handleBlogNavigation(blog.slug, blog.blog_id);
-                  }
-                }}
-                className={`group block border border-slate-100 rounded-lg hover:shadow-md transition-all duration-200 overflow-hidden relative flex flex-col h-full bg-white ${loadingBlogId === blog.blog_id ? 'opacity-70 pointer-events-none' : ''}`}
-              >
-                <div className="w-full aspect-square bg-slate-50 relative p-4 flex items-center justify-center">
-                  {blog.featured_image ? (
-                    <img
-                      src={blog.featured_image}
-                      alt={blog.title}
-                      className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
-                    />
-                  ) : (
-                    <BookOpen className="text-slate-300 w-12 h-12" />
-                  )}
-                  {loadingBlogId === blog.blog_id && (
-                    <div className="absolute inset-0 bg-white/50 flex items-center justify-center z-10">
-                      <div className="w-6 h-6 border-2 border-slate-200 border-t-green-600 rounded-full animate-spin"></div>
-                    </div>
-                  )}
-                </div>
-                
-                <div className="p-3 flex flex-col flex-grow border-t border-slate-50">
-                  <h3 className="text-sm font-semibold text-slate-800 line-clamp-2 mb-1 group-hover:text-green-600 transition-colors">
-                    {blog.title}
-                  </h3>
-                  {blog.read_time && (
-                    <p className="text-xs text-slate-500 mt-auto pt-2">
-                      {blog.read_time} min read
-                    </p>
-                  )}
-                </div>
-              </Link>
-            ))}
-          </div>
-        </section>
-
-        {/* 4. HOW IT WORKS (Streamlined for e-commerce feel) */}
-        <section className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-          {[
-            { title: 'Browse Categories', desc: 'Find carefully curated products.', icon: <ShoppingCart className="w-5 h-5 text-green-600" /> },
-            { title: 'Read Our Insights', desc: 'Gain unbiased comparisons.', icon: <BookOpen className="w-5 h-5 text-green-600" /> },
-            { title: 'Buy Confidently', desc: 'Redirect to trusted stores.', icon: <CreditCard className="w-5 h-5 text-green-600" /> },
-          ].map(({ title, desc, icon }, i) => (
-            <div key={i} className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center gap-4">
-              <div className="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center shrink-0">
-                {icon}
-              </div>
-              <div>
-                <h3 className="font-bold text-slate-900 text-sm">{title}</h3>
-                <p className="text-slate-500 text-xs">{desc}</p>
-              </div>
-            </div>
-          ))}
-        </section>
-
-      </div>
-
-      {/* MODALS & LOADERS */}
-      {showModal && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4">
-          <div className="bg-white w-full max-w-sm p-6 relative rounded-xl shadow-2xl animate-in zoom-in-95 duration-200">
-            <button
-              onClick={() => setShowModal(false)}
-              className="absolute top-4 right-4 text-slate-400 hover:text-slate-700 transition-colors"
-            >
-              <X size={20} />
-            </button>
-
-            <div className="text-center mb-6">
-              <h3 className="text-xl font-bold text-slate-900 mb-1">
-                {isSignup ? 'Create Account' : 'Welcome Back'}
-              </h3>
-              <p className="text-slate-500 text-xs">
-                {isSignup ? 'Join to save products and comparisons' : 'Login to access your saved picks'}
-              </p>
-            </div>
-
-            {error && (
-              <div className="bg-red-50 text-red-600 p-2 rounded text-xs mb-4 text-center font-medium">
-                {error}
-              </div>
-            )}
-
-            <div className="space-y-3 mb-6">
-              <div>
-                <input
-                  placeholder="Username"
-                  value={username}
-                  onChange={e => setUsername(e.target.value)}
-                  className="w-full p-3 text-sm rounded border border-slate-300 text-slate-900 focus:border-green-500 focus:ring-1 focus:ring-green-500 outline-none transition-all"
-                />
-              </div>
-              <div>
-                <input
-                  type="password"
-                  placeholder="Password"
-                  value={password}
-                  onChange={e => setPassword(e.target.value)}
-                  className="w-full p-3 text-sm rounded border border-slate-300 text-slate-900 focus:border-green-500 focus:ring-1 focus:ring-green-500 outline-none transition-all"
-                />
-              </div>
-            </div>
-
-            <button
-              onClick={isSignup ? handleSignup : handleLogin}
-              className="w-full bg-[#fb641b] text-white p-3 rounded font-bold shadow-sm hover:bg-[#f05a12] transition-colors mb-4 text-sm"
-            >
-              {isSignup ? 'Sign Up' : 'Login'}
-            </button>
-
-            <p className="text-xs text-center text-slate-500">
-              {isSignup ? (
-                <>Already have an account? <button onClick={() => setIsSignup(false)} className="text-blue-600 font-bold hover:underline">Login</button></>
-              ) : (
-                <>New to ExpressDeal? <button onClick={() => setIsSignup(true)} className="text-blue-600 font-bold hover:underline">Create an account</button></>
-              )}
+            <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-black mb-4 drop-shadow-sm">
+              {t[lang].brand}
+            </h1>
+            <p className="text-gray-500 text-base md:text-lg font-medium max-w-md mx-auto leading-relaxed">
+              {t[lang].tagline}
             </p>
           </div>
-        </div>
-      )}
 
-      {/* Global Page Loader */}
-      {loading && (
-        <div className="fixed inset-0 z-[110] flex flex-col items-center justify-center bg-white/70 backdrop-blur-sm">
-          <div className="bg-white p-4 rounded-lg shadow-xl border border-slate-100 flex flex-col items-center gap-3">
-            <div className="w-8 h-8 border-4 border-slate-200 border-t-green-600 rounded-full animate-spin"></div>
-            <p className="text-slate-700 text-sm font-semibold">Loading...</p>
+          {/* Problem Card */}
+          <div className="w-full bg-white rounded-[2rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] border border-gray-100 p-2 transition-all duration-300 hover:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.08)] flex flex-col mb-8">
+            
+            {/* Problem Description Area */}
+            <div className="p-6 md:p-8 border-b border-gray-100">
+              <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
+                <div className="flex items-center gap-3">
+                  <h2 className="text-2xl font-bold text-black tracking-tight">
+                    {t[lang].problemTitle}
+                  </h2>
+                  <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
+                    {t[lang].difficulty}
+                  </span>
+                </div>
+              </div>
+              <p className="text-gray-600 leading-relaxed font-medium text-lg">
+                {t[lang].problemDesc}
+              </p>
+            </div>
+
+            {/* External Platform Link Area */}
+            <div className="p-6 md:p-8 bg-gray-50 rounded-b-[1.5rem] flex flex-col md:flex-row items-center justify-between gap-6">
+              <div className="flex items-center gap-4 text-sm font-semibold text-gray-500">
+                <span className="flex items-center justify-center w-10 h-10 rounded-full bg-white border border-gray-200 shadow-sm">
+                  <Code2 size={20} className="text-black" />
+                </span>
+                Platform: LeetCode
+              </div>
+              
+              <a
+                href={problemUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full md:w-auto bg-black text-white px-8 py-3.5 rounded-full font-bold hover:bg-gray-800 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-md"
+              >
+                <span>{t[lang].solveExternally}</span>
+                <ExternalLink size={18} />
+              </a>
+            </div>
           </div>
-        </div>
-      )}
-      
-      {/* Hide scrollbar styles */}
-      <style dangerouslySetInnerHTML={{__html: `
-        .hide-scrollbar::-webkit-scrollbar {
-          display: none;
-        }
-        .hide-scrollbar {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
-      `}} />
-    </main>
+
+          {/* Pomodoro Timer Section */}
+          <div className="w-full bg-white rounded-[2rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] border border-gray-100 p-6 md:p-8 transition-all duration-300 hover:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.08)] mb-8 flex flex-col md:flex-row items-center justify-between gap-8">
+            <div className="flex-1 text-center md:text-left">
+              <h3 className="text-2xl font-bold text-black mb-2 flex items-center justify-center md:justify-start gap-2 tracking-tight">
+                <BrainCircuit size={24} className="text-gray-400" />
+                {t[lang].pomoTitle}
+              </h3>
+              <p className="text-gray-500 font-medium">
+                {t[lang].pomoDesc}
+              </p>
+
+              {/* Mode Switcher */}
+              <div className="flex items-center justify-center md:justify-start gap-2 mt-6">
+                <button 
+                  onClick={() => switchMode('work')}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold transition-all ${isWorkMode ? 'bg-black text-white shadow-md' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'}`}
+                >
+                  <Timer size={16} />
+                  {t[lang].pomoFocus}
+                </button>
+                <button 
+                  onClick={() => switchMode('break')}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold transition-all ${!isWorkMode ? 'bg-black text-white shadow-md' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'}`}
+                >
+                  <Coffee size={16} />
+                  {t[lang].pomoBreak}
+                </button>
+              </div>
+            </div>
+
+            {/* Timer Display & Controls */}
+            <div className="flex flex-col items-center bg-gray-50 p-6 rounded-[1.5rem] border border-gray-100 min-w-[240px]">
+              <div className="text-5xl font-extrabold text-black tracking-tight mb-6 tabular-nums">
+                {formatTime(timeLeft)}
+              </div>
+              
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={toggleTimer}
+                  className="flex items-center gap-2 bg-black text-white px-6 py-3 rounded-full font-bold hover:bg-gray-800 transition-all hover:scale-105 active:scale-95 shadow-md"
+                >
+                  {isActive ? <Pause size={18} fill="currentColor" /> : <Play size={18} fill="currentColor" />}
+                  {isActive ? t[lang].pomoPause : t[lang].pomoStart}
+                </button>
+                <button
+                  onClick={resetTimer}
+                  className="p-3 bg-white text-gray-500 border border-gray-200 rounded-full hover:text-black hover:border-black transition-all hover:scale-105 active:scale-95 shadow-sm"
+                  aria-label="Reset Timer"
+                >
+                  <RotateCcw size={20} />
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Resources Section */}
+          <div className="w-full animate-in fade-in slide-in-from-bottom-8 duration-700 delay-150">
+            <div className="w-full bg-white rounded-[2rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] border border-gray-100 p-6 md:p-8 transition-all duration-300 hover:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.08)]">
+              <h3 className="text-2xl font-bold text-black mb-6 flex items-center gap-3 tracking-tight">
+                <BookOpen size={24} className="text-gray-400" />
+                {t[lang].resourcesTitle}
+              </h3>
+              
+              <div className="flex flex-col gap-4">
+                {/* Video Resource */}
+                <a 
+                  href={videoUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group flex items-center justify-between p-5 md:p-6 bg-gray-50 border border-gray-100 rounded-[1.5rem] hover:bg-white hover:border-gray-200 hover:shadow-sm hover:scale-[1.01] transition-all duration-300"
+                >
+                  <div className="flex items-center gap-4 md:gap-5">
+                    <div className="flex items-center justify-center w-12 h-12 rounded-full bg-white border border-gray-200 shadow-sm group-hover:border-black transition-colors">
+                      <Youtube size={22} className="text-black" />
+                    </div>
+                    <div>
+                      <h4 className="text-lg font-bold text-black">
+                        {t[lang].videoLink}
+                      </h4>
+                      <p className="text-sm font-medium text-gray-500 mt-0.5">YouTube</p>
+                    </div>
+                  </div>
+                  <div className="bg-white border border-gray-200 p-2.5 rounded-full shadow-sm group-hover:bg-black group-hover:text-white group-hover:border-black transition-all">
+                     <ChevronRight size={18} />
+                  </div>
+                </a>
+
+                {/* Article Resource */}
+                <a 
+                  href={articleUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group flex items-center justify-between p-5 md:p-6 bg-gray-50 border border-gray-100 rounded-[1.5rem] hover:bg-white hover:border-gray-200 hover:shadow-sm hover:scale-[1.01] transition-all duration-300"
+                >
+                  <div className="flex items-center gap-4 md:gap-5">
+                    <div className="flex items-center justify-center w-12 h-12 rounded-full bg-white border border-gray-200 shadow-sm group-hover:border-black transition-colors">
+                      <BookOpen size={22} className="text-black" />
+                    </div>
+                    <div>
+                      <h4 className="text-lg font-bold text-black">
+                        {t[lang].articleLink}
+                      </h4>
+                      <p className="text-sm font-medium text-gray-500 mt-0.5">Written Guide</p>
+                    </div>
+                  </div>
+                  <div className="bg-white border border-gray-200 p-2.5 rounded-full shadow-sm group-hover:bg-black group-hover:text-white group-hover:border-black transition-all">
+                     <ChevronRight size={18} />
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+
+        </main>
+      </div>
+    </>
   )
 }
 
-export default Hero
+export default SolveOne
