@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { Code2, ExternalLink, Youtube, BookOpen, ChevronRight, Play, Pause, RotateCcw, Timer, Coffee, BrainCircuit } from 'lucide-react'
+import { Code2, ExternalLink, Youtube, BookOpen, ChevronRight, Play, Pause, RotateCcw, Timer, Coffee, BrainCircuit, Lightbulb, Eye } from 'lucide-react'
 
 const SolveOne = () => {
   // --- Language State ---
@@ -11,6 +11,9 @@ const SolveOne = () => {
   const [timeLeft, setTimeLeft] = useState(25 * 60) // 25 minutes in seconds
   const [isActive, setIsActive] = useState(false)
   const [isWorkMode, setIsWorkMode] = useState(true) // true for work, false for break
+
+  // --- Hint State ---
+  const [isHintRevealed, setIsHintRevealed] = useState(false)
 
   // --- Pomodoro Logic ---
   useEffect(() => {
@@ -67,7 +70,10 @@ const SolveOne = () => {
       pomoFocus: "Focus",
       pomoBreak: "Break",
       pomoStart: "Start",
-      pomoPause: "Pause"
+      pomoPause: "Pause",
+      hintTitle: "Need a hint?",
+      hintText: "A brute force approach is O(n²), but can you do it in O(n)? Try using a Hash Map to store the numbers you've seen so far and their indices.",
+      showHint: "Reveal Hint"
     },
     mr: {
       brand: "OneProblem",
@@ -84,7 +90,10 @@ const SolveOne = () => {
       pomoFocus: "काम",
       pomoBreak: "विश्रांती",
       pomoStart: "सुरू करा",
-      pomoPause: "थांबवा"
+      pomoPause: "थांबवा",
+      hintTitle: "अडकलात? हिंट पहा",
+      hintText: "ब्रूट फोर्स दृष्टिकोन O(n²) असेल, पण तुम्ही हे O(n) मध्ये करू शकता का? आतापर्यंत पाहिलेल्या संख्या आणि त्यांचे इंडायसेस साठवण्यासाठी हॅश मॅप (Hash Map) वापरून पहा.",
+      showHint: "हिंट दाखवा"
     }
   }
 
@@ -182,63 +191,100 @@ const SolveOne = () => {
             </div>
           </div>
 
-          {/* Pomodoro Timer Section */}
-          <div className="w-full bg-white rounded-[2rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] border border-gray-100 p-6 md:p-8 transition-all duration-300 hover:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.08)] mb-8 flex flex-col md:flex-row items-center justify-between gap-8">
-            <div className="flex-1 text-center md:text-left">
-              <h3 className="text-2xl font-bold text-black mb-2 flex items-center justify-center md:justify-start gap-2 tracking-tight">
-                <BrainCircuit size={24} className="text-gray-400" />
+          {/* TWO-COLUMN GRID: Pomodoro & Hints */}
+          <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-100">
+            
+            {/* Pomodoro Timer Section */}
+            <div className="w-full bg-white rounded-[2rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] border border-gray-100 p-6 md:p-8 transition-all duration-300 hover:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.08)] flex flex-col items-center text-center">
+              <h3 className="text-xl font-bold text-black mb-2 flex items-center gap-2 tracking-tight">
+                <BrainCircuit size={22} className="text-gray-400" />
                 {t[lang].pomoTitle}
               </h3>
-              <p className="text-gray-500 font-medium">
+              <p className="text-gray-500 font-medium text-sm mb-6">
                 {t[lang].pomoDesc}
               </p>
 
-              {/* Mode Switcher */}
-              <div className="flex items-center justify-center md:justify-start gap-2 mt-6">
-                <button 
-                  onClick={() => switchMode('work')}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold transition-all ${isWorkMode ? 'bg-black text-white shadow-md' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'}`}
-                >
-                  <Timer size={16} />
-                  {t[lang].pomoFocus}
-                </button>
-                <button 
-                  onClick={() => switchMode('break')}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold transition-all ${!isWorkMode ? 'bg-black text-white shadow-md' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'}`}
-                >
-                  <Coffee size={16} />
-                  {t[lang].pomoBreak}
-                </button>
+              <div className="bg-gray-50 w-full p-6 rounded-[1.5rem] border border-gray-100 flex flex-col items-center flex-1 justify-center">
+                <div className="text-5xl font-extrabold text-black tracking-tight mb-6 tabular-nums">
+                  {formatTime(timeLeft)}
+                </div>
+                
+                <div className="flex items-center gap-3 w-full justify-center">
+                  <button
+                    onClick={toggleTimer}
+                    className="flex items-center justify-center flex-1 gap-2 bg-black text-white px-6 py-3 rounded-full font-bold hover:bg-gray-800 transition-all active:scale-95 shadow-md"
+                  >
+                    {isActive ? <Pause size={18} fill="currentColor" /> : <Play size={18} fill="currentColor" />}
+                    {isActive ? t[lang].pomoPause : t[lang].pomoStart}
+                  </button>
+                  <button
+                    onClick={resetTimer}
+                    className="p-3 bg-white text-gray-500 border border-gray-200 rounded-full hover:text-black hover:border-black transition-all active:scale-95 shadow-sm shrink-0"
+                    aria-label="Reset Timer"
+                  >
+                    <RotateCcw size={20} />
+                  </button>
+                </div>
+
+                {/* Mode Switcher */}
+                <div className="flex items-center justify-center gap-2 mt-4 w-full">
+                  <button 
+                    onClick={() => switchMode('work')}
+                    className={`flex items-center justify-center flex-1 gap-2 px-3 py-2 rounded-full text-xs font-bold transition-all ${isWorkMode ? 'bg-black text-white shadow-md' : 'bg-transparent text-gray-500 hover:bg-gray-200'}`}
+                  >
+                    <Timer size={14} />
+                    {t[lang].pomoFocus}
+                  </button>
+                  <button 
+                    onClick={() => switchMode('break')}
+                    className={`flex items-center justify-center flex-1 gap-2 px-3 py-2 rounded-full text-xs font-bold transition-all ${!isWorkMode ? 'bg-black text-white shadow-md' : 'bg-transparent text-gray-500 hover:bg-gray-200'}`}
+                  >
+                    <Coffee size={14} />
+                    {t[lang].pomoBreak}
+                  </button>
+                </div>
               </div>
             </div>
 
-            {/* Timer Display & Controls */}
-            <div className="flex flex-col items-center bg-gray-50 p-6 rounded-[1.5rem] border border-gray-100 min-w-[240px]">
-              <div className="text-5xl font-extrabold text-black tracking-tight mb-6 tabular-nums">
-                {formatTime(timeLeft)}
+            {/* Hint Section */}
+            <div className="w-full bg-white rounded-[2rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] border border-gray-100 p-6 md:p-8 transition-all duration-300 hover:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.08)] flex flex-col">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-xl font-bold text-black flex items-center gap-2 tracking-tight">
+                  <Lightbulb size={20} className="text-gray-400" />
+                  {t[lang].hintTitle}
+                </h3>
               </div>
               
-              <div className="flex items-center gap-3">
-                <button
-                  onClick={toggleTimer}
-                  className="flex items-center gap-2 bg-black text-white px-6 py-3 rounded-full font-bold hover:bg-gray-800 transition-all hover:scale-105 active:scale-95 shadow-md"
+              {/* Hint Content Area */}
+              <div className="relative flex-1 bg-gray-50 border border-gray-100 rounded-[1.5rem] p-6 overflow-hidden flex flex-col justify-center min-h-[180px]">
+                
+                {/* The blurred text */}
+                <p 
+                  className={`text-gray-700 font-medium text-base leading-relaxed text-center transition-all duration-500 ${
+                    !isHintRevealed ? 'blur-md select-none opacity-40' : 'blur-0 opacity-100'
+                  }`}
                 >
-                  {isActive ? <Pause size={18} fill="currentColor" /> : <Play size={18} fill="currentColor" />}
-                  {isActive ? t[lang].pomoPause : t[lang].pomoStart}
-                </button>
-                <button
-                  onClick={resetTimer}
-                  className="p-3 bg-white text-gray-500 border border-gray-200 rounded-full hover:text-black hover:border-black transition-all hover:scale-105 active:scale-95 shadow-sm"
-                  aria-label="Reset Timer"
-                >
-                  <RotateCcw size={20} />
-                </button>
+                  {t[lang].hintText}
+                </p>
+
+                {/* Overlay Button */}
+                {!isHintRevealed && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-gray-50/30">
+                    <button
+                      onClick={() => setIsHintRevealed(true)}
+                      className="flex items-center gap-2 bg-white border border-gray-200 text-black px-6 py-3 rounded-full font-bold hover:border-black hover:bg-gray-50 transition-all active:scale-95 shadow-md"
+                    >
+                      <Eye size={18} />
+                      {t[lang].showHint}
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           </div>
 
           {/* Resources Section */}
-          <div className="w-full animate-in fade-in slide-in-from-bottom-8 duration-700 delay-150">
+          <div className="w-full animate-in fade-in slide-in-from-bottom-8 duration-700 delay-200">
             <div className="w-full bg-white rounded-[2rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] border border-gray-100 p-6 md:p-8 transition-all duration-300 hover:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.08)]">
               <h3 className="text-2xl font-bold text-black mb-6 flex items-center gap-3 tracking-tight">
                 <BookOpen size={24} className="text-gray-400" />
