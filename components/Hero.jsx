@@ -70,7 +70,7 @@ const SolveOne = () => {
       pomoPause: "Pause"
     },
     mr: {
-      brand: "SolveOne",
+      brand: "OneProblem",
       tagline: "दररोज एक कोडिंग समस्या. सातत्य ही यशाची गुरुकिल्ली आहे.",
       problemTitle: "आजचे आव्हान: Two Sum",
       difficulty: "सोपे",
