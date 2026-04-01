@@ -58,9 +58,9 @@ const SolveOne = () => {
     en: {
       brand: "OneProblem",
       tagline: "One coding problem every day. Consistency is the key to mastery.",
-      problemTitle: "Today's Challenge: Two Sum",
-      difficulty: "Easy",
-      problemDesc: "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target. You may assume that each input would have exactly one solution.",
+      problemTitle: "Today's Challenge: Number of Provinces",
+      difficulty: "Medium",
+      problemDesc: "You are given an $n \times n$ adjacency matrix indicating which cities are directly connected to each other, with interconnected cities forming isolated groups known as provinces. Your objective is to analyze these connections and return the total number of distinct provinces.",
       solveExternally: "Solve on LeetCode",
       resourcesTitle: "Learning Resources",
       videoLink: "Watch Video Explanation",
@@ -72,15 +72,15 @@ const SolveOne = () => {
       pomoStart: "Start",
       pomoPause: "Pause",
       hintTitle: "Need a hint?",
-      hintText: "A brute force approach is O(n²), but can you do it in O(n)? Try using a Hash Map to store the numbers you've seen so far and their indices.",
+      hintText: "Treat the cities as nodes in a graph. Every time you find a city you haven't visited yet, you've discovered a new province; now just find all its neighbors before moving on.",
       showHint: "Reveal Hint"
     },
     mr: {
       brand: "OneProblem",
       tagline: "दररोज एक कोडिंग समस्या. सातत्य ही यशाची गुरुकिल्ली आहे.",
-      problemTitle: "आजचे आव्हान: Two Sum",
-      difficulty: "सोपे",
-      problemDesc: "nums नावाचा पूर्णांकांचा ॲरे (array) आणि एक टार्गेट (target) दिले असता, ज्या दोन संख्यांची बेरीज टार्गेट एवढी होते, त्यांचे इंडायसेस (indices) परत करा. प्रत्येक इनपुटला फक्त एकच उत्तर असेल असे गृहीत धरा.",
+      problemTitle: "आजचे आव्हान: Number of Provinces",
+      difficulty: "मध्यम",
+      problemDesc: "तुम्हाला $n \times n$ चा एक अ‍ॅडजसेन्सी मॅट्रिक्स (adjacency matrix) दिला आहे, जो दर्शवतो की कोणती शहरे एकमेकांशी थेट जोडलेली आहेत. यामध्ये एकमेकांशी (थेट किंवा अप्रत्यक्षपणे) जोडलेल्या शहरांच्या स्वतंत्र गटांना 'प्रांत' (provinces) असे म्हटले जाते.तुमचे उद्दिष्ट या जोडणीचे विश्लेषण करणे आणि एकूण किती स्वतंत्र प्रांत आहेत, त्याची संख्या शोधणे हे आहे.",
       solveExternally: "LeetCode वर सोडवा",
       resourcesTitle: "शिक्षणासाठी साधने",
       videoLink: "व्हिडिओ स्पष्टीकरण पहा",
@@ -92,15 +92,15 @@ const SolveOne = () => {
       pomoStart: "सुरू करा",
       pomoPause: "थांबवा",
       hintTitle: "अडकलात? हिंट पहा",
-      hintText: "ब्रूट फोर्स दृष्टिकोन O(n²) असेल, पण तुम्ही हे O(n) मध्ये करू शकता का? आतापर्यंत पाहिलेल्या संख्या आणि त्यांचे इंडायसेस साठवण्यासाठी हॅश मॅप (Hash Map) वापरून पहा.",
+      hintText: "शहरांकडे एका ग्राफमधील नोड्स म्हणून पहा. प्रत्येक वेळी जेव्हा तुम्हाला असे शहर सापडेल ज्याला तुम्ही अद्याप भेट दिली नाही, तेव्हा समजा की तुम्हाला एक नवीन प्रांत (new province) सापडला आहे; आता फक्त पुढे जाण्यापूर्वी त्या शहराच्या सर्व शेजाऱ्यांना शोधून त्यांना व्हिजिटेड म्हणून चिन्हांकित करा.",
       showHint: "हिंट दाखवा"
     }
   }
 
   // Dummy URLs for the daily problem
-  const problemUrl = "https://leetcode.com/problems/two-sum/"
-  const videoUrl = "https://www.youtube.com/watch?v=KLlXCFG5TnA" 
-  const articleUrl = "https://leetcode.com/articles/two-sum/"
+  const problemUrl = "https://leetcode.com/problems/number-of-provinces"
+  const videoUrl = "https://youtu.be/ACzkVtewUYA?si=9ncQ4NA4H2Rx3ME6" 
+  const articleUrl = "https://algo.monster/liteproblems/547"
 
   return (
     <>
