@@ -114,10 +114,10 @@ const SolveOne = () => {
         <div className="absolute top-0 left-0 right-0 h-[50vh] bg-gradient-to-b from-blue-100/40 to-transparent -z-10 pointer-events-none" />
 
         {/* --- Language Toggle Slider --- */}
-        <div className="absolute top-6 left-6 flex items-center bg-white/50 backdrop-blur-md p-1.5 rounded-full border border-gray-200/50 z-20 shadow-sm">
+        <div className="absolute top-4 left-1/2 -translate-x-1/2 md:top-6 md:left-6 md:translate-x-0 flex items-center bg-white/50 backdrop-blur-md p-1.5 rounded-full border border-gray-200/50 z-20 shadow-sm w-max">
           <button
             onClick={() => setLang('en')}
-            className={`px-4 py-1.5 text-xs font-bold rounded-full transition-all duration-300 ${
+            className={`px-4 py-1.5 text-xs sm:text-sm font-bold rounded-full transition-all duration-300 ${
               lang === 'en' ? 'bg-black text-white shadow-md' : 'text-gray-500 hover:text-black'
             }`}
           >
@@ -125,7 +125,7 @@ const SolveOne = () => {
           </button>
           <button
             onClick={() => setLang('mr')}
-            className={`px-4 py-1.5 text-xs font-bold rounded-full transition-all duration-300 ${
+            className={`px-4 py-1.5 text-xs sm:text-sm font-bold rounded-full transition-all duration-300 ${
               lang === 'mr' ? 'bg-black text-white shadow-md' : 'text-gray-500 hover:text-black'
             }`}
           >
@@ -133,48 +133,48 @@ const SolveOne = () => {
           </button>
         </div>
 
-        <main className="w-full max-w-3xl mx-auto px-6 pt-24 pb-20 flex flex-col items-center z-10">
+        <main className="w-full max-w-3xl mx-auto px-4 sm:px-6 pt-20 md:pt-24 pb-16 md:pb-20 flex flex-col items-center z-10">
           
           {/* Header Section */}
-          <div className="text-center mb-10 w-full animate-in slide-in-from-top-4 duration-700">
+          <div className="text-center mb-8 md:mb-10 w-full animate-in slide-in-from-top-4 duration-700">
             <div className="flex justify-center mb-4">
-              <div className="bg-black text-white p-3 rounded-2xl shadow-lg">
-                <Code2 size={40} />
+              <div className="bg-black text-white p-2.5 md:p-3 rounded-2xl shadow-lg">
+                <Code2 size={32} className="md:w-10 md:h-10" />
               </div>
             </div>
-            <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-black mb-4 drop-shadow-sm">
+            <h1 className="text-3xl sm:text-4xl md:text-6xl font-extrabold tracking-tight text-black mb-3 md:mb-4 drop-shadow-sm px-2">
               {t[lang].brand}
             </h1>
-            <p className="text-gray-500 text-base md:text-lg font-medium max-w-md mx-auto leading-relaxed">
+            <p className="text-gray-500 text-sm sm:text-base md:text-lg font-medium max-w-[280px] sm:max-w-md mx-auto leading-relaxed">
               {t[lang].tagline}
             </p>
           </div>
 
           {/* Problem Card */}
-          <div className="w-full bg-white rounded-[2rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] border border-gray-100 p-2 transition-all duration-300 hover:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.08)] flex flex-col mb-8">
+          <div className="w-full bg-white rounded-[1.5rem] md:rounded-[2rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] border border-gray-100 p-1.5 md:p-2 transition-all duration-300 hover:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.08)] flex flex-col mb-6 md:mb-8">
             
             {/* Problem Description Area */}
-            <div className="p-6 md:p-8 border-b border-gray-100">
-              <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
-                <div className="flex items-center gap-3">
-                  <h2 className="text-2xl font-bold text-black tracking-tight">
+            <div className="p-5 md:p-8 border-b border-gray-100">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 md:gap-4 mb-4 md:mb-6">
+                <div className="flex items-start sm:items-center gap-3 flex-wrap">
+                  <h2 className="text-xl sm:text-2xl font-bold text-black tracking-tight">
                     {t[lang].problemTitle}
                   </h2>
-                  <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
+                  <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-[10px] sm:text-xs font-bold uppercase tracking-wider shrink-0 mt-1 sm:mt-0">
                     {t[lang].difficulty}
                   </span>
                 </div>
               </div>
-              <p className="text-gray-600 leading-relaxed font-medium text-lg">
+              <p className="text-gray-600 leading-relaxed font-medium text-base sm:text-lg">
                 {t[lang].problemDesc}
               </p>
             </div>
 
             {/* External Platform Link Area */}
-            <div className="p-6 md:p-8 bg-gray-50 rounded-b-[1.5rem] flex flex-col md:flex-row items-center justify-between gap-6">
-              <div className="flex items-center gap-4 text-sm font-semibold text-gray-500">
-                <span className="flex items-center justify-center w-10 h-10 rounded-full bg-white border border-gray-200 shadow-sm">
-                  <Code2 size={20} className="text-black" />
+            <div className="p-5 md:p-8 bg-gray-50 rounded-b-[1.2rem] md:rounded-b-[1.5rem] flex flex-col sm:flex-row items-center justify-between gap-4 md:gap-6">
+              <div className="flex items-center gap-3 text-sm font-semibold text-gray-500 w-full sm:w-auto">
+                <span className="flex items-center justify-center w-8 h-8 md:w-10 md:h-10 rounded-full bg-white border border-gray-200 shadow-sm shrink-0">
+                  <Code2 size={18} className="text-black md:w-5 md:h-5" />
                 </span>
                 Platform: LeetCode
               </div>
@@ -183,46 +183,46 @@ const SolveOne = () => {
                 href={problemUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full md:w-auto bg-black text-white px-8 py-3.5 rounded-full font-bold hover:bg-gray-800 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-md"
+                className="w-full sm:w-auto bg-black text-white px-6 md:px-8 py-3 md:py-3.5 rounded-full font-bold hover:bg-gray-800 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-md text-sm md:text-base"
               >
                 <span>{t[lang].solveExternally}</span>
-                <ExternalLink size={18} />
+                <ExternalLink size={16} className="md:w-[18px] md:h-[18px]" />
               </a>
             </div>
           </div>
 
           {/* TWO-COLUMN GRID: Pomodoro & Hints */}
-          <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-100">
+          <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 mb-6 md:mb-8 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-100">
             
             {/* Pomodoro Timer Section */}
-            <div className="w-full bg-white rounded-[2rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] border border-gray-100 p-6 md:p-8 transition-all duration-300 hover:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.08)] flex flex-col items-center text-center">
-              <h3 className="text-xl font-bold text-black mb-2 flex items-center gap-2 tracking-tight">
-                <BrainCircuit size={22} className="text-gray-400" />
+            <div className="w-full bg-white rounded-[1.5rem] md:rounded-[2rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] border border-gray-100 p-5 md:p-8 transition-all duration-300 hover:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.08)] flex flex-col items-center text-center">
+              <h3 className="text-lg md:text-xl font-bold text-black mb-2 flex items-center gap-2 tracking-tight">
+                <BrainCircuit size={20} className="text-gray-400 md:w-[22px] md:h-[22px]" />
                 {t[lang].pomoTitle}
               </h3>
-              <p className="text-gray-500 font-medium text-sm mb-6">
+              <p className="text-gray-500 font-medium text-xs md:text-sm mb-5 md:mb-6">
                 {t[lang].pomoDesc}
               </p>
 
-              <div className="bg-gray-50 w-full p-6 rounded-[1.5rem] border border-gray-100 flex flex-col items-center flex-1 justify-center">
-                <div className="text-5xl font-extrabold text-black tracking-tight mb-6 tabular-nums">
+              <div className="bg-gray-50 w-full p-5 md:p-6 rounded-[1.2rem] md:rounded-[1.5rem] border border-gray-100 flex flex-col items-center flex-1 justify-center">
+                <div className="text-5xl sm:text-6xl md:text-5xl font-extrabold text-black tracking-tight mb-5 md:mb-6 tabular-nums">
                   {formatTime(timeLeft)}
                 </div>
                 
-                <div className="flex items-center gap-3 w-full justify-center">
+                <div className="flex items-center gap-2 md:gap-3 w-full justify-center">
                   <button
                     onClick={toggleTimer}
-                    className="flex items-center justify-center flex-1 gap-2 bg-black text-white px-6 py-3 rounded-full font-bold hover:bg-gray-800 transition-all active:scale-95 shadow-md"
+                    className="flex items-center justify-center flex-1 gap-2 bg-black text-white px-4 md:px-6 py-2.5 md:py-3 rounded-full font-bold hover:bg-gray-800 transition-all active:scale-95 shadow-md text-sm md:text-base"
                   >
-                    {isActive ? <Pause size={18} fill="currentColor" /> : <Play size={18} fill="currentColor" />}
+                    {isActive ? <Pause size={16} fill="currentColor" className="md:w-[18px] md:h-[18px]" /> : <Play size={16} fill="currentColor" className="md:w-[18px] md:h-[18px]" />}
                     {isActive ? t[lang].pomoPause : t[lang].pomoStart}
                   </button>
                   <button
                     onClick={resetTimer}
-                    className="p-3 bg-white text-gray-500 border border-gray-200 rounded-full hover:text-black hover:border-black transition-all active:scale-95 shadow-sm shrink-0"
+                    className="p-2.5 md:p-3 bg-white text-gray-500 border border-gray-200 rounded-full hover:text-black hover:border-black transition-all active:scale-95 shadow-sm shrink-0"
                     aria-label="Reset Timer"
                   >
-                    <RotateCcw size={20} />
+                    <RotateCcw size={18} className="md:w-5 md:h-5" />
                   </button>
                 </div>
 
@@ -230,14 +230,14 @@ const SolveOne = () => {
                 <div className="flex items-center justify-center gap-2 mt-4 w-full">
                   <button 
                     onClick={() => switchMode('work')}
-                    className={`flex items-center justify-center flex-1 gap-2 px-3 py-2 rounded-full text-xs font-bold transition-all ${isWorkMode ? 'bg-black text-white shadow-md' : 'bg-transparent text-gray-500 hover:bg-gray-200'}`}
+                    className={`flex items-center justify-center flex-1 gap-1.5 md:gap-2 px-3 py-2 rounded-full text-[11px] md:text-xs font-bold transition-all ${isWorkMode ? 'bg-black text-white shadow-md' : 'bg-transparent text-gray-500 hover:bg-gray-200'}`}
                   >
                     <Timer size={14} />
                     {t[lang].pomoFocus}
                   </button>
                   <button 
                     onClick={() => switchMode('break')}
-                    className={`flex items-center justify-center flex-1 gap-2 px-3 py-2 rounded-full text-xs font-bold transition-all ${!isWorkMode ? 'bg-black text-white shadow-md' : 'bg-transparent text-gray-500 hover:bg-gray-200'}`}
+                    className={`flex items-center justify-center flex-1 gap-1.5 md:gap-2 px-3 py-2 rounded-full text-[11px] md:text-xs font-bold transition-all ${!isWorkMode ? 'bg-black text-white shadow-md' : 'bg-transparent text-gray-500 hover:bg-gray-200'}`}
                   >
                     <Coffee size={14} />
                     {t[lang].pomoBreak}
@@ -247,20 +247,20 @@ const SolveOne = () => {
             </div>
 
             {/* Hint Section */}
-            <div className="w-full bg-white rounded-[2rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] border border-gray-100 p-6 md:p-8 transition-all duration-300 hover:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.08)] flex flex-col">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-xl font-bold text-black flex items-center gap-2 tracking-tight">
-                  <Lightbulb size={20} className="text-gray-400" />
+            <div className="w-full bg-white rounded-[1.5rem] md:rounded-[2rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] border border-gray-100 p-5 md:p-8 transition-all duration-300 hover:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.08)] flex flex-col">
+              <div className="flex items-center justify-between mb-4 md:mb-5">
+                <h3 className="text-lg md:text-xl font-bold text-black flex items-center gap-2 tracking-tight">
+                  <Lightbulb size={18} className="text-gray-400 md:w-5 md:h-5" />
                   {t[lang].hintTitle}
                 </h3>
               </div>
               
               {/* Hint Content Area */}
-              <div className="relative flex-1 bg-gray-50 border border-gray-100 rounded-[1.5rem] p-6 overflow-hidden flex flex-col justify-center min-h-[180px]">
+              <div className="relative flex-1 bg-gray-50 border border-gray-100 rounded-[1.2rem] md:rounded-[1.5rem] p-5 md:p-6 overflow-hidden flex flex-col justify-center min-h-[160px] md:min-h-[180px]">
                 
                 {/* The blurred text */}
                 <p 
-                  className={`text-gray-700 font-medium text-base leading-relaxed text-center transition-all duration-500 ${
+                  className={`text-gray-700 font-medium text-sm sm:text-base leading-relaxed text-center transition-all duration-500 ${
                     !isHintRevealed ? 'blur-md select-none opacity-40' : 'blur-0 opacity-100'
                   }`}
                 >
@@ -269,12 +269,12 @@ const SolveOne = () => {
 
                 {/* Overlay Button */}
                 {!isHintRevealed && (
-                  <div className="absolute inset-0 flex items-center justify-center bg-gray-50/30">
+                  <div className="absolute inset-0 flex items-center justify-center bg-gray-50/30 p-4">
                     <button
                       onClick={() => setIsHintRevealed(true)}
-                      className="flex items-center gap-2 bg-white border border-gray-200 text-black px-6 py-3 rounded-full font-bold hover:border-black hover:bg-gray-50 transition-all active:scale-95 shadow-md"
+                      className="flex items-center justify-center gap-2 w-full sm:w-auto bg-white border border-gray-200 text-black px-5 md:px-6 py-2.5 md:py-3 rounded-full font-bold hover:border-black hover:bg-gray-50 transition-all active:scale-95 shadow-md text-sm md:text-base"
                     >
-                      <Eye size={18} />
+                      <Eye size={16} className="md:w-[18px] md:h-[18px]" />
                       {t[lang].showHint}
                     </button>
                   </div>
@@ -285,33 +285,33 @@ const SolveOne = () => {
 
           {/* Resources Section */}
           <div className="w-full animate-in fade-in slide-in-from-bottom-8 duration-700 delay-200">
-            <div className="w-full bg-white rounded-[2rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] border border-gray-100 p-6 md:p-8 transition-all duration-300 hover:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.08)]">
-              <h3 className="text-2xl font-bold text-black mb-6 flex items-center gap-3 tracking-tight">
-                <BookOpen size={24} className="text-gray-400" />
+            <div className="w-full bg-white rounded-[1.5rem] md:rounded-[2rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] border border-gray-100 p-5 md:p-8 transition-all duration-300 hover:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.08)]">
+              <h3 className="text-xl md:text-2xl font-bold text-black mb-5 md:mb-6 flex items-center gap-2 md:gap-3 tracking-tight">
+                <BookOpen size={20} className="text-gray-400 md:w-6 md:h-6" />
                 {t[lang].resourcesTitle}
               </h3>
               
-              <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-3 md:gap-4">
                 {/* Video Resource */}
                 <a 
                   href={videoUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group flex items-center justify-between p-5 md:p-6 bg-gray-50 border border-gray-100 rounded-[1.5rem] hover:bg-white hover:border-gray-200 hover:shadow-sm hover:scale-[1.01] transition-all duration-300"
+                  className="group flex items-center justify-between p-4 sm:p-5 md:p-6 bg-gray-50 border border-gray-100 rounded-[1.2rem] md:rounded-[1.5rem] hover:bg-white hover:border-gray-200 hover:shadow-sm hover:scale-[1.01] transition-all duration-300"
                 >
-                  <div className="flex items-center gap-4 md:gap-5">
-                    <div className="flex items-center justify-center w-12 h-12 rounded-full bg-white border border-gray-200 shadow-sm group-hover:border-black transition-colors">
-                      <Youtube size={22} className="text-black" />
+                  <div className="flex items-center gap-3 sm:gap-4 md:gap-5">
+                    <div className="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white border border-gray-200 shadow-sm group-hover:border-black transition-colors shrink-0">
+                      <Youtube size={18} className="text-black sm:w-[22px] sm:h-[22px]" />
                     </div>
                     <div>
-                      <h4 className="text-lg font-bold text-black">
+                      <h4 className="text-base sm:text-lg font-bold text-black line-clamp-1">
                         {t[lang].videoLink}
                       </h4>
-                      <p className="text-sm font-medium text-gray-500 mt-0.5">YouTube</p>
+                      <p className="text-xs sm:text-sm font-medium text-gray-500 mt-0.5">YouTube</p>
                     </div>
                   </div>
-                  <div className="bg-white border border-gray-200 p-2.5 rounded-full shadow-sm group-hover:bg-black group-hover:text-white group-hover:border-black transition-all">
-                     <ChevronRight size={18} />
+                  <div className="bg-white border border-gray-200 p-2 sm:p-2.5 rounded-full shadow-sm group-hover:bg-black group-hover:text-white group-hover:border-black transition-all shrink-0 ml-2">
+                     <ChevronRight size={16} className="sm:w-[18px] sm:h-[18px]" />
                   </div>
                 </a>
 
@@ -320,21 +320,21 @@ const SolveOne = () => {
                   href={articleUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group flex items-center justify-between p-5 md:p-6 bg-gray-50 border border-gray-100 rounded-[1.5rem] hover:bg-white hover:border-gray-200 hover:shadow-sm hover:scale-[1.01] transition-all duration-300"
+                  className="group flex items-center justify-between p-4 sm:p-5 md:p-6 bg-gray-50 border border-gray-100 rounded-[1.2rem] md:rounded-[1.5rem] hover:bg-white hover:border-gray-200 hover:shadow-sm hover:scale-[1.01] transition-all duration-300"
                 >
-                  <div className="flex items-center gap-4 md:gap-5">
-                    <div className="flex items-center justify-center w-12 h-12 rounded-full bg-white border border-gray-200 shadow-sm group-hover:border-black transition-colors">
-                      <BookOpen size={22} className="text-black" />
+                  <div className="flex items-center gap-3 sm:gap-4 md:gap-5">
+                    <div className="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white border border-gray-200 shadow-sm group-hover:border-black transition-colors shrink-0">
+                      <BookOpen size={18} className="text-black sm:w-[22px] sm:h-[22px]" />
                     </div>
                     <div>
-                      <h4 className="text-lg font-bold text-black">
+                      <h4 className="text-base sm:text-lg font-bold text-black line-clamp-1">
                         {t[lang].articleLink}
                       </h4>
-                      <p className="text-sm font-medium text-gray-500 mt-0.5">Written Guide</p>
+                      <p className="text-xs sm:text-sm font-medium text-gray-500 mt-0.5">Written Guide</p>
                     </div>
                   </div>
-                  <div className="bg-white border border-gray-200 p-2.5 rounded-full shadow-sm group-hover:bg-black group-hover:text-white group-hover:border-black transition-all">
-                     <ChevronRight size={18} />
+                  <div className="bg-white border border-gray-200 p-2 sm:p-2.5 rounded-full shadow-sm group-hover:bg-black group-hover:text-white group-hover:border-black transition-all shrink-0 ml-2">
+                     <ChevronRight size={16} className="sm:w-[18px] sm:h-[18px]" />
                   </div>
                 </a>
               </div>
