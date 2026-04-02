@@ -58,9 +58,9 @@ const SolveOne = () => {
     en: {
       brand: "OneProblem",
       tagline: "One coding problem every day. Consistency is the key to mastery.",
-      problemTitle: "Today's Challenge: Number of Provinces",
+      problemTitle: "Today's Challenge: Insert into a Binary Search Tree",
       difficulty: "Medium",
-      problemDesc: "You are given an n x n adjacency matrix indicating which cities are directly connected to each other, with interconnected cities forming isolated groups known as provinces. Your objective is to analyze these connections and return the total number of distinct provinces.",
+      problemDesc: "You are given the root node of a binary search tree (BST) and a value to insert into the tree. Return the root node of the BST after the insertion. It is guaranteed that the new value does not exist in the original BST.",
       solveExternally: "Solve on LeetCode",
       resourcesTitle: "Learning Resources",
       videoLink: "Watch Video Explanation",
@@ -72,15 +72,15 @@ const SolveOne = () => {
       pomoStart: "Start",
       pomoPause: "Pause",
       hintTitle: "Need a hint?",
-      hintText: "Treat the cities as nodes in a graph. Every time you find a city you haven't visited yet, you've discovered a new province; now just find all its neighbors before moving on.",
+      hintText: "Follow the BST property: at each node, decide left or right based on whether the value is smaller or larger. Keep traversing until you hit a null position....that’s where you attach the new node.",
       showHint: "Reveal Hint"
     },
     mr: {
       brand: "OneProblem",
       tagline: "दररोज एक कोडिंग समस्या. सातत्य ही यशाची गुरुकिल्ली आहे.",
-      problemTitle: "आजचे आव्हान: Number of Provinces",
+      problemTitle: "आजचे आव्हान: Insert into a Binary Search Tree",
       difficulty: "मध्यम",
-      problemDesc: "तुम्हाला n x n चा एक अ‍ॅडजसेन्सी मॅट्रिक्स (adjacency matrix) दिला आहे, जो दर्शवतो की कोणती शहरे एकमेकांशी थेट जोडलेली आहेत. यामध्ये एकमेकांशी (थेट किंवा अप्रत्यक्षपणे) जोडलेल्या शहरांच्या स्वतंत्र गटांना 'प्रांत' (provinces) असे म्हटले जाते.तुमचे उद्दिष्ट या जोडणीचे विश्लेषण करणे आणि एकूण किती स्वतंत्र प्रांत आहेत, त्याची संख्या शोधणे हे आहे.",
+      problemDesc: "तुम्हाला एका Binary Search Tree (BST) चा root node आणि insert करायची value दिलेली आहे. त्या value ला योग्य ठिकाणी insert करून updated BST चा root परत करा. ही value आधी tree मध्ये नसणार आहे, त्यामुळे ती थेट BST च्या नियमांनुसार योग्य जागी टाकायची आहे.",
       solveExternally: "LeetCode वर सोडवा",
       resourcesTitle: "शिक्षणासाठी साधने",
       videoLink: "व्हिडिओ स्पष्टीकरण पहा",
@@ -92,15 +92,15 @@ const SolveOne = () => {
       pomoStart: "सुरू करा",
       pomoPause: "थांबवा",
       hintTitle: "अडकलात? हिंट पहा",
-      hintText: "शहरांकडे एका ग्राफमधील नोड्स म्हणून पहा. प्रत्येक वेळी जेव्हा तुम्हाला असे शहर सापडेल ज्याला तुम्ही अद्याप भेट दिली नाही, तेव्हा समजा की तुम्हाला एक नवीन प्रांत (new province) सापडला आहे; आता फक्त पुढे जाण्यापूर्वी त्या शहराच्या सर्व शेजाऱ्यांना शोधून त्यांना व्हिजिटेड म्हणून चिन्हांकित करा.",
+      hintText: "BST चा नियम फॉलो करा: प्रत्येक node वर value छोटी असेल तर left ला जा, मोठी असेल तर right ला जा. असं करत करत null position मिळेपर्यंत traverse करा....तिथेच नवीन node attach करा.",
       showHint: "हिंट दाखवा"
     }
   }
 
   // Dummy URLs for the daily problem
-  const problemUrl = "https://leetcode.com/problems/number-of-provinces"
-  const videoUrl = "https://youtu.be/ACzkVtewUYA?si=9ncQ4NA4H2Rx3ME6" 
-  const articleUrl = "https://algo.monster/liteproblems/547"
+  const problemUrl = "https://leetcode.com/problems/insert-into-a-binary-search-tree"
+  const videoUrl = "https://youtu.be/FiFiNvM29ps?si=i37AS7VPfL3gDS3a" 
+  const articleUrl = "https://www.geeksforgeeks.org/dsa/insertion-in-binary-search-tree"
 
   return (
     <>
